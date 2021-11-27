@@ -1,0 +1,23 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: false
+    registry-fetch-interval-seconds: 2
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: store-service
+          uri: lb://store-service
+          predicates:
+            - Path=/store/**
+          filters:
+            - StripPrefix=1
+
+server:
+  port: 8090
