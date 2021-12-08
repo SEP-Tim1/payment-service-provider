@@ -8,6 +8,30 @@ eureka:
 spring:
   application:
     name: auth-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/psp-auth
+    username: postgres
+    password: admin
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
+    generate-ddl: true
+  sql:
+    init:
+      mode: always
 
 server:
   port: 8083
+  error:
+    include-message: always
+    include-binding-errors: always
