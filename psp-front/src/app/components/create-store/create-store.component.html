@@ -1,0 +1,15 @@
+<h1 style="text-align: center; margin: 20px">Create your store</h1>
+<mat-form-field style="width: 60%; margin-left: 20%;">
+    <mat-label>Name</mat-label>
+    <textarea
+      id="nameeInput"
+      #name="ngModel"
+      name="namee"
+      matInput
+      required
+      cdkTextareaAutosize
+      [(ngModel)]="namee"
+      style="height: 40%"
+    ></textarea>
+</mat-form-field>
+<button mat-raised-button (click)="create()" style="width: 20%; margin-left: 40%;" [disabled]="namee === ''">Create</button>

@@ -23,7 +23,7 @@ export class RegistrationPageComponent implements OnInit {
         this.openSnackBar("You successfully signed up!");
       },
       error => {
-        this.openSnackBar(error.error.message);
+        this.openSnackBar(error.error);
       }
     )
   }

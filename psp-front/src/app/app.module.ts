@@ -24,6 +24,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTableModule } from '@angular/material/table';
 import { StorePageComponent } from './pages/store-page/store-page.component';
+import { CreateStoreComponent } from './components/create-store/create-store.component';
+import { StoreInfoComponent } from './components/store-info/store-info.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -31,10 +34,13 @@ import { StorePageComponent } from './pages/store-page/store-page.component';
     LoginPageComponent,
     RegistrationPageComponent,
     AuthFormComponent,
-    StorePageComponent
+    StorePageComponent,
+    CreateStoreComponent,
+    StoreInfoComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     MatSnackBarModule,

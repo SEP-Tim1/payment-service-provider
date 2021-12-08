@@ -73,12 +73,12 @@ public class TokenService {
 
     public long getIdFromToken(String token) {
         final Claims claims = this.getAllClaimsFromToken(token);
-        return (long) claims.get("id");
+        return Long.parseLong(claims.get("id").toString());
     }
 
     public Role getRoleFromToken(String token) {
         final Claims claims = this.getAllClaimsFromToken(token);
-        return (Role) claims.get("role");
+        return Role.valueOf(claims.get("role").toString());
     }
 
     public Date getIssuedAtDateFromToken(String token) {

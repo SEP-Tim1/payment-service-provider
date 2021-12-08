@@ -1,1 +1,2 @@
-<p>store-page works!</p>
+<app-create-store *ngIf="store === null" (storeCreated)="get()"></app-create-store>
+<app-store-info *ngIf="store !== null" [store]="store"></app-store-info>

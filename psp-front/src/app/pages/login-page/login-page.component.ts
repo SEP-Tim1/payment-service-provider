@@ -23,7 +23,7 @@ export class LoginPageComponent implements OnInit {
         this.router.navigate(['store']);
       },
       error => {
-        this.openSnackBar(error.error.message);
+        this.openSnackBar(error.error);
       }
     )
   }
