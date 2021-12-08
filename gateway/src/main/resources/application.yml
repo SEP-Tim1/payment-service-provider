@@ -18,6 +18,24 @@ spring:
             - Path=/store/**
           filters:
             - StripPrefix=1
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: card-payment-service
+          uri: lb://card-payment-service
+          predicates:
+            - Path=/card/**
+          filters:
+            - StripPrefix=1
+        - id: payment-request-service
+          uri: lb://payment-request-service
+          predicates:
+            - Path=/request/**
+          filters:
+            - StripPrefix=1
 
 server:
   port: 8090
