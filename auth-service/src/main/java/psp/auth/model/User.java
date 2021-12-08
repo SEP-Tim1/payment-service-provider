@@ -19,11 +19,11 @@ public class User {
     @Column
     private String username;
     @Column
-    private byte[] password;
+    private String password;
     @Column
     private Role role;
 
-    public User(String username, byte[] password, Role role) {
+    public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;

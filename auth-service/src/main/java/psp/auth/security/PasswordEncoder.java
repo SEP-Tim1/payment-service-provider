@@ -1,26 +1,30 @@
 package psp.auth.security;
 
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 public class PasswordEncoder {
 
-    private static final int ITERATIONS = 1000;
-    private static final int KEY_LENGTH = 512;
-    private static final String SALT = "gbifrnewqmk";
+    private static final String HASH_FUNC_NAME = "SHA-512";
 
-    public static byte[] encode(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
-        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), SALT.getBytes(), ITERATIONS, KEY_LENGTH);
-        SecretKey key = skf.generateSecret(spec);
-        byte[] encoded = key.getEncoded();
-        return encoded;
+    public static String encode(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        MessageDigest md = MessageDigest.getInstance(HASH_FUNC_NAME);
+        byte[] messageDigest = md.digest(password.getBytes());
+        BigInteger no = new BigInteger(1, messageDigest);
+        String hashtext = no.toString(16);
+        while (hashtext.length() < 32) {
+            hashtext = "0" + hashtext;
+        }
+        return hashtext;
     }
 
-    public static boolean valid(String password, byte[] hashedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return encode(password).equals(hashedPassword);
+    public static boolean equals(String password, String hashedPassword) {
+        try {
+            return encode(password).equals(hashedPassword);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            return false;
+        }
     }
 }
