@@ -1,10 +1,7 @@
 package psp.request.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import psp.request.dtos.PaymentRequestDTO;
 import psp.request.dtos.PaymentResponseDTO;
 import psp.request.exceptions.NotFoundException;
@@ -20,5 +17,10 @@ public class PaymentRequestController {
     @PostMapping
     public PaymentResponseDTO create(@RequestBody PaymentRequestDTO dto) throws NotFoundException {
         return service.create(dto);
+    }
+
+    @GetMapping("failure/{requestId}")
+    public String getFailureUrl(@PathVariable long requestId) throws NotFoundException {
+        return service.getFailureUrl(requestId);
     }
 }

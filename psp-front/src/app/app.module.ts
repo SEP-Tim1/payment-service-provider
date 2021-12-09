@@ -27,6 +27,7 @@ import { StorePageComponent } from './pages/store-page/store-page.component';
 import { CreateStoreComponent } from './components/create-store/create-store.component';
 import { StoreInfoComponent } from './components/store-info/store-info.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CustomerPaymentMethodsPageComponent } from './pages/customer-payment-methods-page/customer-payment-methods-page.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AuthFormComponent,
     StorePageComponent,
     CreateStoreComponent,
-    StoreInfoComponent
+    StoreInfoComponent,
+    CustomerPaymentMethodsPageComponent
   ],
   imports: [
     BrowserModule,

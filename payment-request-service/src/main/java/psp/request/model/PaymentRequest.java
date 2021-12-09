@@ -30,6 +30,10 @@ public class PaymentRequest {
     private String failureUrl;
     @Column
     private String errorUrl;
+    @Column
+    private boolean processed;
+    @Column
+    private boolean successful;
 
     public PaymentRequest(long storeId, long merchantOrderId, LocalDateTime merchantTimestamp, float amount, String successUrl, String failureUrl, String errorUrl) {
         this.storeId = storeId;

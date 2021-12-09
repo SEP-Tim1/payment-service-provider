@@ -9,6 +9,8 @@ import psp.request.exceptions.NotFoundException;
 import psp.request.model.PaymentRequest;
 import psp.request.repositories.PaymentRequestRepository;
 
+import java.util.Optional;
+
 @Service
 public class PaymentRequestService {
 
@@ -36,5 +38,13 @@ public class PaymentRequestService {
         );
         request = repository.save(request);
         return new PaymentResponseDTO(request.getId());
+    }
+
+    public String getFailureUrl(long requestId) throws NotFoundException {
+        Optional<PaymentRequest> request = repository.findById(requestId);
+        if(request.isEmpty()) {
+            throw new NotFoundException("Request not found");
+        }
+        return request.get().getFailureUrl();
     }
 }
