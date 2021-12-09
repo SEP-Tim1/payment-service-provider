@@ -2,8 +2,11 @@ package psp.store.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import psp.store.exceptions.NotFoundException;
 import psp.store.model.Store;
 import psp.store.repositories.StoreRepository;
+
+import java.util.Optional;
 
 @Service
 public class StoreService {
@@ -23,5 +26,13 @@ public class StoreService {
 
     public Store getByUserId(long userId) {
         return repository.findByUserId(userId);
+    }
+
+    public long getIdByApiToken(String apiToken) throws NotFoundException {
+        Optional<Store> store = repository.getByApiToken(apiToken);
+        if(store.isEmpty()) {
+            throw new NotFoundException("Store not found");
+        }
+        return store.get().getId();
     }
 }
