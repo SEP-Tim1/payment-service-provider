@@ -14,10 +14,14 @@ import java.util.Optional;
 @Service
 public class PaymentRequestService {
 
+    private final PaymentRequestRepository repository;
+    private final StoreClient storeClient;
+
     @Autowired
-    private PaymentRequestRepository repository;
-    @Autowired
-    private StoreClient storeClient;
+    public PaymentRequestService(PaymentRequestRepository repository, StoreClient storeClient) {
+        this.repository = repository;
+        this.storeClient = storeClient;
+    }
 
     public PaymentResponseDTO create(PaymentRequestDTO dto) throws NotFoundException {
         long storeId;
@@ -39,6 +43,12 @@ public class PaymentRequestService {
         request = repository.save(request);
         return new PaymentResponseDTO(request.getId());
     }
+
+    public PaymentRequest getById(long id) throws NotFoundException {
+        if(repository.findById(id).isPresent()) return repository.findById(id).get();
+        throw new NotFoundException("Payment Request could not be found");
+    }
+
 
     public String getFailureUrl(long requestId) throws NotFoundException {
         Optional<PaymentRequest> request = repository.findById(requestId);

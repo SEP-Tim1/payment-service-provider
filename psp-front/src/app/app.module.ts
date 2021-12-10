@@ -38,7 +38,7 @@ import { CustomerPaymentMethodsPageComponent } from './pages/customer-payment-me
     StorePageComponent,
     CreateStoreComponent,
     StoreInfoComponent,
-    CustomerPaymentMethodsPageComponent
+    CustomerPaymentMethodsPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,7 +59,7 @@ import { CustomerPaymentMethodsPageComponent } from './pages/customer-payment-me
     MatDividerModule,
     MatListModule,
     MatGridListModule,
-    MatTableModule
+    MatTableModule,
   ],
   providers: [
     {
@@ -70,4 +70,4 @@ import { CustomerPaymentMethodsPageComponent } from './pages/customer-payment-me
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
