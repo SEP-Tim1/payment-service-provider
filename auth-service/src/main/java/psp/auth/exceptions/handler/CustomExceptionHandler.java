@@ -20,7 +20,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
-        log.error(e.getMessage());
+        log.error("Unhandled exception", e);
         return new ResponseEntity<>(GENERIC_ERROR_RESPONSE, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

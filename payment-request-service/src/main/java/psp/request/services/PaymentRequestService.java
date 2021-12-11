@@ -1,5 +1,6 @@
 package psp.request.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import psp.request.clients.StoreClient;
@@ -11,6 +12,7 @@ import psp.request.repositories.PaymentRequestRepository;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class PaymentRequestService {
 
@@ -28,7 +30,7 @@ public class PaymentRequestService {
         try {
             storeId = storeClient.getIdByApiToken(dto.getApiToken());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("Attempt to create a payment request with invalid API Token");
             throw new NotFoundException("Store could not be found");
         }
         PaymentRequest request = new PaymentRequest(
@@ -41,6 +43,7 @@ public class PaymentRequestService {
                 dto.getErrorUrl()
         );
         request = repository.save(request);
+        log.info("Payment request (id=" + request.getId() + ") created");
         return new PaymentResponseDTO(request.getId());
     }
 

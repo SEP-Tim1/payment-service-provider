@@ -1,11 +1,13 @@
 package psp.request.exceptions.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import psp.request.exceptions.BaseException;
 
+@Slf4j
 @RestControllerAdvice
 public class CustomExceptionHandler {
 
@@ -18,7 +20,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
-        e.printStackTrace();
+        log.error("Unhandled exception", e);
         return new ResponseEntity<>(GENERIC_ERROR_RESPONSE, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
