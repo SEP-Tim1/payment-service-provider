@@ -1,5 +1,6 @@
 package psp.payment.card.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import psp.payment.card.client.Bank1Client;
@@ -13,6 +14,7 @@ import psp.payment.card.exceptions.StoreNotFoundException;
 import psp.payment.card.model.Card;
 import psp.payment.card.repositories.CardRepository;
 
+@Slf4j
 @Service
 public class CardService {
 
@@ -47,19 +49,21 @@ public class CardService {
     }
 
     public void enable(MerchantInfoDTO dto, long storeId) throws StoreNotFoundException, MerchantCredentialsNotValidException {
-        validateCredentials(dto);
+        validateCredentials(dto, storeId);
         Card card = getByStoreId(storeId);
         card.setCardPaymentEnabled(true);
         cardRepository.save(card);
+        log.info("Store (id=" + storeId + ") enabled card payment services");
     }
 
     public void disable(long storeId) throws StoreNotFoundException {
         Card card = getByStoreId(storeId);
         card.setCardPaymentEnabled(false);
         cardRepository.save(card);
+        log.info("Store (id=" + storeId + ") disabled card payment services");
     }
 
-    private void validateCredentials(MerchantInfoDTO dto) throws MerchantCredentialsNotValidException {
+    private void validateCredentials(MerchantInfoDTO dto, long storeId) throws MerchantCredentialsNotValidException {
         try {
             MerchantCredentialsDTO credentials = new MerchantCredentialsDTO(dto.getMid(), dto.getMpassword());
             if (dto.getBank() == 1) {
@@ -68,6 +72,7 @@ public class CardService {
                 bank2.validate(credentials);
             }
         } catch (Exception e) {
+            log.info("Store (id=" + storeId + ") has invalid merchant id and/or merchant password");
             throw new MerchantCredentialsNotValidException();
         }
     }
