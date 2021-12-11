@@ -9,6 +9,11 @@ eureka:
 spring:
   application:
     name: gateway
+  zipkin:
+    baseUrl: http://localhost:9411/
+  sleuth:
+    sampler:
+      probability: 1
   cloud:
     gateway:
       default-filters:
