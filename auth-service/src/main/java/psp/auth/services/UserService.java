@@ -1,5 +1,6 @@
 package psp.auth.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import psp.auth.dto.UserDTO;
@@ -15,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 @Service
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -23,11 +25,14 @@ public class UserService {
     private TokenService tokenService;
 
     public void registerMerchant(UserDTO dto) throws NotUniqueException, NoSuchAlgorithmException, InvalidKeySpecException {
+        log.info("Registration attempted");
         if(repository.existsByUsername(dto.getUsername())) {
+            log.info("Username taken");
             throw new NotUniqueException("User with provided username already exists!");
         }
         User user = new User(dto.getUsername(), PasswordEncoder.encode(dto.getPassword()), Role.MERCHANT);
-        repository.save(user);
+        user = repository.save(user);
+        log.info("User with id=" + user.getId() + " successfully registered");
     }
 
     public String logIn(UserDTO dto) throws NotFoundException, InvalidArgumentException {
