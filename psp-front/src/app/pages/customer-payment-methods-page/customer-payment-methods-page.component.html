@@ -1,1 +1,56 @@
-<p>customer-payment-methods-page works!</p>
+<div class="div1">
+  <mat-card class="card1">
+    <form (submit)="bla()" #feedform="ngForm" style="width: 80%" novalidate>
+      <h2 style="text-align: center">Select Payment Service:</h2>
+      <div style="text-align: center; margin-top: 50px">
+        <button
+          id="cardButton"
+          [disabled]="!card"
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="cardPayment()"
+          style="padding: 12px 32px; opacity: 120%; width: 50%"
+        >
+          Card Payment
+        </button>
+      </div>
+      <div style="text-align: center; margin-top: 50px">
+        <button
+          id="paypalButton"
+          [disabled]="!paypal"
+          mat-raised-button
+          color="primary"
+          type="button"
+          style="padding: 12px 32px; opacity: 120%; width: 50%"
+        >
+          Paypal
+        </button>
+      </div>
+      <div style="text-align: center; margin-top: 50px">
+        <button
+          id="qrButton"
+          [disabled]="!qrcode"
+          mat-raised-button
+          color="primary"
+          type="button"
+          style="padding: 12px 32px; opacity: 120%; width: 50%"
+        >
+          QR Code
+        </button>
+      </div>
+      <div style="text-align: center; margin-top: 50px; margin-bottom: 30px">
+        <button
+          id="bitcoinButton"
+          [disabled]="!bitcoin"
+          mat-raised-button
+          color="primary"
+          type="button"
+          style="padding: 12px 32px; opacity: 120%; width: 50%"
+        >
+          Bitcoin
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

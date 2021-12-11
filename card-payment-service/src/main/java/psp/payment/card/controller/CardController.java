@@ -25,7 +25,7 @@ public class CardController {
             PaymentRequest request = cardService.getByRequestId(requestId);
             return ResponseEntity.ok(cardService.getByStoreId(request));
         } catch (StoreNotFoundException e) {
-            return ResponseEntity.ok(false);
+            return ResponseEntity.badRequest().body("Store not found.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Request not found.");
         }
