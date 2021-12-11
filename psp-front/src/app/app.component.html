@@ -1,48 +1,47 @@
-<p style="background-color:cadetblue; margin: 0 0 0px">
-    <mat-toolbar>
-      <button
-        mat-icon-button
-        class="example-icon"
-        (click)="home()"
-        aria-label="Example icon-button with menu icon"
-      >
-        <mat-icon>home</mat-icon>
-      </button>
-      <span>Payment Service Provider</span>
-      <span class="example-spacer"></span>
+<p style="background-color: cadetblue; margin: 0 0 0px">
+  <mat-toolbar>
+    <button
+      mat-icon-button
+      class="example-icon"
+      (click)="home()"
+      aria-label="Example icon-button with menu icon"
+    >
+      <mat-icon>home</mat-icon>
+    </button>
+    <span>Payment Service Provider</span>
+    <span class="example-spacer"></span>
 
-      <button
-        matToolTip="Log Out"
-        mat-icon-button
-        class="example-icon"
-        style="float: right"
-        *ngIf="
-          this.authService.isLoggedIn() &&
-          !this.authService.loginComponent &&
-          !this.authService.registerComponent
-        "
+    <button
+      matToolTip="Log Out"
+      mat-icon-button
+      class="example-icon"
+      style="float: right"
+      *ngIf="
+        this.authService.isLoggedIn() &&
+        !this.authService.loginComponent &&
+        !this.authService.registerComponent
+      "
+    >
+      <mat-icon matToolTip="Log Out" (click)="this.authService.logout()"
+        >exit_to_app</mat-icon
       >
-        <mat-icon matToolTip="Log Out" (click)="this.authService.logout()"
-          >exit_to_app</mat-icon
-        >
-      </button>
+    </button>
 
-      <button
-        mat-button
-        routerLink="login"
-        *ngIf="!this.authService.isLoggedIn()"
-      >
-        Log In
-      </button>
+    <button
+      mat-button
+      routerLink="login"
+      *ngIf="!this.authService.isLoggedIn()"
+    >
+      Log In
+    </button>
 
-      <button
-        mat-button
-        routerLink="registration"
-        *ngIf="!this.authService.isLoggedIn()"
-      >
-        Sign Up
-      </button>
-
-    </mat-toolbar>
-  </p>
-<router-outlet></router-outlet>
+    <button
+      mat-button
+      routerLink="registration"
+      *ngIf="!this.authService.isLoggedIn()"
+    >
+      Sign Up
+    </button>
+  </mat-toolbar>
+</p>
+<router-outlet style="background-color: rgb(43, 131, 204)"></router-outlet>

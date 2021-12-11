@@ -1,0 +1,12 @@
+package psp.payment.card.client;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import psp.payment.card.dtos.MerchantCredentialsDTO;
+
+@FeignClient(url= "localhost:8061", name = "first-bank")
+public interface Bank1Client {
+    @PostMapping("account/validate")
+    void validate(@RequestBody MerchantCredentialsDTO dto);
+}

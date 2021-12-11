@@ -7,10 +7,9 @@ import { User } from '../model/user';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   loginUrl = environment.backend + '/auth/auth/login';
   registrerUrl = environment.backend + '/auth/auth/register';
 
@@ -77,6 +76,7 @@ export class AuthService {
     localStorage.removeItem('role');
     localStorage.removeItem('id');
     localStorage.removeItem('username');
+    localStorage.removeItem('storeId');
     this.router.navigate(['login']);
   }
 }

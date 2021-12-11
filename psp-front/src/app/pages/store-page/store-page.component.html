@@ -1,2 +1,7 @@
-<app-create-store *ngIf="store === null" (storeCreated)="get()"></app-create-store>
-<app-store-info *ngIf="store !== null" [store]="store"></app-store-info>
+<div class="div1">
+  <app-create-store
+    *ngIf="store === null"
+    (storeCreated)="get()"
+  ></app-create-store>
+  <app-store-info *ngIf="store !== null" [store]="store"></app-store-info>
+</div>

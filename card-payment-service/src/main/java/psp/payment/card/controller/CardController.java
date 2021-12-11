@@ -1,11 +1,11 @@
 package psp.payment.card.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import psp.payment.card.dtos.IsEnabledDTO;
+import psp.payment.card.dtos.MerchantInfoDTO;
 import psp.payment.card.dtos.PaymentRequest;
+import psp.payment.card.exceptions.MerchantCredentialsNotValidException;
 import psp.payment.card.exceptions.StoreNotFoundException;
 import psp.payment.card.service.CardService;
 
@@ -28,6 +28,37 @@ public class CardController {
             return ResponseEntity.badRequest().body("Store not found.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Request not found.");
+        }
+    }
+
+    @GetMapping("/store/{id}")
+    public ResponseEntity<?> isCardEnabledForStore(@PathVariable long id){
+        try {
+            return ResponseEntity.ok(cardService.getByStoreId(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Store not found.");
+        }
+    }
+
+    @PostMapping("/enable/{storeId}")
+    public ResponseEntity<?> enable(@RequestBody MerchantInfoDTO dto, @PathVariable long storeId){
+        try {
+            cardService.enable(dto, storeId);
+            return ResponseEntity.ok(new IsEnabledDTO(true));
+        } catch (StoreNotFoundException e) {
+            return ResponseEntity.badRequest().body("Store not found.");
+        } catch (MerchantCredentialsNotValidException e) {
+            return ResponseEntity.badRequest().body("Invalid credentials!");
+        }
+    }
+
+    @GetMapping("/disable/{storeId}")
+    public ResponseEntity<?> disable(@PathVariable long storeId){
+        try {
+            cardService.disable(storeId);
+            return ResponseEntity.ok(new IsEnabledDTO(false));
+        } catch (StoreNotFoundException e) {
+            return ResponseEntity.badRequest().body("Store not found.");
         }
     }
 }

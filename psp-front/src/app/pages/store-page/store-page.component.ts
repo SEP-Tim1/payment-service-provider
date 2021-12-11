@@ -5,11 +5,10 @@ import { StoreService } from 'src/app/services/store.service';
 @Component({
   selector: 'app-store-page',
   templateUrl: './store-page.component.html',
-  styleUrls: ['./store-page.component.css']
+  styleUrls: ['./store-page.component.css'],
 })
 export class StorePageComponent implements OnInit {
-
-  constructor(private service: StoreService) { }
+  constructor(private service: StoreService) {}
 
   store: Store | null = null;
 
@@ -18,8 +17,9 @@ export class StorePageComponent implements OnInit {
   }
 
   get() {
-    this.service.get().subscribe(
-      result => this.store = result
-    )
+    this.service.get().subscribe((result) => {
+      this.store = result;
+      localStorage.setItem('storeId', result.id.toString());
+    });
   }
 }

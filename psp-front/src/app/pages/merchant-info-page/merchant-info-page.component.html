@@ -1,0 +1,75 @@
+<div class="div1">
+  <mat-card class="card1">
+    <div class="grid-container">
+      <div class="grid-item">
+        <form
+          (submit)="sendRequest()"
+          #feedform="ngForm"
+          style="width: 100%"
+          novalidate
+        >
+          <h2 style="text-align: center">Insert Merchant Info</h2>
+
+          <div class="center">
+            <mat-form-field style="width: 100%">
+              <mat-label>Merchant ID</mat-label>
+              <input
+                matInput
+                [(ngModel)]="mid"
+                required
+                pattern="[0-9]*"
+                placeholder="Insert Merchant ID Number"
+                maxlength="50"
+                name="mid"
+                style="height: 40%"
+                [formControl]="idControl"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="center">
+            <mat-form-field style="width: 100%">
+              <mat-label>Merchant Password</mat-label>
+              <input
+                matInput
+                [(ngModel)]="dto.mpassword"
+                placeholder="Insert Merchant Password"
+                required
+                maxlength="50"
+                name="mpassword"
+                style="height: 40%"
+              />
+            </mat-form-field>
+          </div>
+          <div class="center">
+            <mat-form-field style="width: 100%">
+              <mat-label>Bank:</mat-label>
+              <mat-select required [(ngModel)]="dto.bank" name="bank">
+                <mat-option [value]="1"> UniCredit Bank </mat-option>
+                <mat-option [value]="2"> Komercijalna Banka </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div
+            style="text-align: center; margin-top: 15px; margin-bottom: 30px"
+          >
+            <button
+              id="sendRequestButton"
+              mat-raised-button
+              [disabled]="
+                !this.idControl.valid ||
+                this.dto.mpassword === '' ||
+                this.dto.bank === 0
+              "
+              color="primary"
+              type="submit"
+              style="padding: 8 3px; width: 50%; height: 50px"
+            >
+              Enable Card Payment
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-card>
+</div>

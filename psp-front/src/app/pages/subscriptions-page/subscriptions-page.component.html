@@ -1,0 +1,58 @@
+<div class="div1">
+  <mat-card class="card1">
+    <form #feedform="ngForm" style="width: 80%" novalidate>
+      <h2 style="text-align: center">Select Payment Service:</h2>
+      <div style="text-align: center; margin-top: 50px">
+        <button
+          id="cardButton"
+          mat-raised-button
+          [ngStyle]="{ 'background-color': card ? 'green' : '#1565c0' }"
+          type="button"
+          (click)="cardPayment()"
+          style="padding: 12px 32px; opacity: 120%; width: 50%; color: white"
+        >
+          {{ card ? "Disable " : "Enable " }} Card Payment
+        </button>
+      </div>
+      <div style="text-align: center; margin-top: 50px">
+        <button
+          id="paypalButton"
+          mat-raised-button
+          [ngStyle]="{ 'background-color': paypal ? 'green' : '#1565c0' }"
+          (click)="paypalToggle()"
+          color="primary"
+          type="button"
+          style="padding: 12px 32px; opacity: 120%; width: 50%"
+        >
+          {{ paypal ? "Disable " : "Enable " }} Paypal
+        </button>
+      </div>
+      <div style="text-align: center; margin-top: 50px">
+        <button
+          id="qrButton"
+          mat-raised-button
+          [ngStyle]="{ 'background-color': qrcode ? 'green' : '#1565c0' }"
+          (click)="qrcodeToggle()"
+          color="primary"
+          type="button"
+          style="padding: 12px 32px; opacity: 120%; width: 50%"
+        >
+          {{ qrcode ? "Disable " : "Enable " }} QR Code
+        </button>
+      </div>
+      <div style="text-align: center; margin-top: 50px; margin-bottom: 30px">
+        <button
+          id="bitcoinButton"
+          mat-raised-button
+          [ngStyle]="{ 'background-color': bitcoin ? 'green' : '#1565c0' }"
+          (click)="bitcoinToggle()"
+          color="primary"
+          type="button"
+          style="padding: 12px 32px; opacity: 120%; width: 50%"
+        >
+          {{ bitcoin ? "Disable " : "Enable " }} Bitcoin
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

@@ -28,6 +28,8 @@ import { CreateStoreComponent } from './components/create-store/create-store.com
 import { StoreInfoComponent } from './components/store-info/store-info.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomerPaymentMethodsPageComponent } from './pages/customer-payment-methods-page/customer-payment-methods-page.component';
+import { SubscriptionsPageComponent } from './pages/subscriptions-page/subscriptions-page.component';
+import { MerchantInfoPageComponent } from './pages/merchant-info-page/merchant-info-page.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,8 @@ import { CustomerPaymentMethodsPageComponent } from './pages/customer-payment-me
     CreateStoreComponent,
     StoreInfoComponent,
     CustomerPaymentMethodsPageComponent,
+    SubscriptionsPageComponent,
+    MerchantInfoPageComponent,
   ],
   imports: [
     BrowserModule,
