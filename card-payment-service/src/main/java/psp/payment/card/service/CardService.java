@@ -1,14 +1,15 @@
 package psp.payment.card.service;
 
+import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import psp.payment.card.client.Bank1Client;
 import psp.payment.card.client.Bank2Client;
 import psp.payment.card.client.Client;
-import psp.payment.card.dtos.MerchantCredentialsDTO;
-import psp.payment.card.dtos.MerchantInfoDTO;
-import psp.payment.card.dtos.PaymentRequest;
+import psp.payment.card.dtos.*;
+import psp.payment.card.exceptions.InvoiceNotValidException;
 import psp.payment.card.exceptions.MerchantCredentialsNotValidException;
+import psp.payment.card.exceptions.RequestNotFoundException;
 import psp.payment.card.exceptions.StoreNotFoundException;
 import psp.payment.card.model.Card;
 import psp.payment.card.repositories.CardRepository;
@@ -46,17 +47,45 @@ public class CardService {
         return client.getById(id);
     }
 
-    public void enable(MerchantInfoDTO dto, long storeId) throws StoreNotFoundException, MerchantCredentialsNotValidException {
+    public void enable(MerchantInfoDTO dto, long storeId) throws MerchantCredentialsNotValidException {
         validateCredentials(dto);
-        Card card = getByStoreId(storeId);
-        card.setCardPaymentEnabled(true);
-        cardRepository.save(card);
+        try {
+            Card card = getByStoreId(storeId);
+            card.update(true, dto.getMid(), dto.getMpassword(), dto.getBank());
+            cardRepository.save(card);
+        } catch (StoreNotFoundException e) {
+            Card card = new Card(storeId, true, dto.getMid(), dto.getMpassword(), dto.getBank());
+            cardRepository.save(card);
+        }
     }
 
     public void disable(long storeId) throws StoreNotFoundException {
         Card card = getByStoreId(storeId);
         card.setCardPaymentEnabled(false);
         cardRepository.save(card);
+    }
+
+    public InvoiceResponseDTO getInvoiceResponse(long requestId) throws RequestNotFoundException, StoreNotFoundException, InvoiceNotValidException {
+        try {
+            PaymentRequest request = getByRequestId(requestId);
+            Card card = getByStoreId(request.getStoreId());
+            return sendInvoice(new InvoiceDTO(request, card), card.getBank());
+        } catch (StoreNotFoundException se) {
+            throw new StoreNotFoundException();
+        } catch (InvoiceNotValidException ie) {
+            throw new InvoiceNotValidException();
+        }catch (Exception e) {
+            throw new RequestNotFoundException();
+        }
+    }
+
+    private InvoiceResponseDTO sendInvoice(InvoiceDTO invoice, int bank) throws InvoiceNotValidException {
+        try{
+            if (bank == 1) return bank1.generate(invoice);
+            return bank2.generate(invoice);
+        } catch (Exception e){
+            throw new InvoiceNotValidException();
+        }
     }
 
     private void validateCredentials(MerchantInfoDTO dto) throws MerchantCredentialsNotValidException {

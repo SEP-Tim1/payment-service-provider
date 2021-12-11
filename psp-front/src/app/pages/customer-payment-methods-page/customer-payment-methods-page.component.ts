@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { InvoiceResponse } from 'src/app/model/invoiceResponse';
 import { CardService } from 'src/app/services/card.service';
 import { PaymentRequestService } from 'src/app/services/payment-request.service';
 
@@ -12,7 +14,8 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private service: PaymentRequestService,
-    private cardService: CardService
+    private cardService: CardService,
+    private snackBar: MatSnackBar
   ) {}
 
   requestId = -1;
@@ -20,6 +23,8 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
   qrcode = false;
   paypal = false;
   bitcoin = false;
+
+  invoiceResponse = new InvoiceResponse('', 0);
 
   ngOnInit(): void {
     this.requestId = this.getRequestId();
@@ -36,12 +41,22 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
 
   bla() {}
 
-  cardPayment() {}
+  cardPayment() {
+    this.cardService.getInvoiceResponse(this.requestId).subscribe(
+      (response) => {
+        this.invoiceResponse = response;
+        this.openSnackBar('Payment URL and ID are generated.');
+        console.log(response);
+        window.location.href = response.paymentUrl.toString();
+      },
+      (error) => {
+        console.log(error.error);
+        this.openSnackBar(error.error);
+      }
+    );
+  }
 
   checkAvailablePaymentMethods() {
-    //pozvati svaki payment servis i proveriti da li taj request id podrzava taj nacin placanja
-    //u zavisnosti od toga postaviti flagove
-    //ako nijedan nacin placanja nije podrzan, customer se redirektuje na failure url koji se nalazi u request-u
     this.cardService.isCardPayementEnabled(this.requestId).subscribe(
       (response) => {
         console.log(response);
@@ -49,6 +64,7 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
       },
       (error) => {
         console.log(error.error);
+        this.openSnackBar(error.error);
       }
     );
 
@@ -58,5 +74,11 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
         window.location.href = redirectUrl;
       });
     }
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, 'Okay', {
+      duration: 5000,
+    });
   }
 }

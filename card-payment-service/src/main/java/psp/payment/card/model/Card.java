@@ -3,6 +3,7 @@ package psp.payment.card.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -23,8 +24,30 @@ public class Card {
     @Column
     private boolean cardPaymentEnabled;
 
-    public Card(long storeId, boolean cardPaymentEnabled) {
+    @Column
+    @Nullable
+    private long mid;
+
+    @Column
+    @Nullable
+    private String mpassword;
+
+    @Column
+    @Nullable
+    private int bank;
+
+    public Card(long storeId, boolean cardPaymentEnabled, long mid, String mpassword, int bank) {
         this.storeId = storeId;
         this.cardPaymentEnabled = cardPaymentEnabled;
+        this.mid = mid;
+        this.mpassword = mpassword;
+        this.bank = bank;
+    }
+
+    public void update(boolean cardPaymentEnabled, long mid, String mpassword, int bank){
+        this.setMpassword(mpassword);
+        this.setMid(mid);
+        this.setCardPaymentEnabled(cardPaymentEnabled);
+        this.setBank(bank);
     }
 }

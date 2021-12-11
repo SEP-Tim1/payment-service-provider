@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Card } from '../model/card';
 import { Merchant } from '../model/merchant';
 import { Enabled } from '../model/enabled';
+import { InvoiceResponse } from '../model/invoiceResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,7 @@ export class CardService {
   isCardPayementEnabledForStoreUrl = environment.backend + '/card/card/store/';
   enableUrl = environment.backend + '/card/card/enable/';
   disableUrl = environment.backend + '/card/card/disable/';
+  invoiceUrl = environment.backend + '/card/card/invoice/';
 
   constructor(private router: Router, private _http: HttpClient) {}
 
@@ -37,5 +39,9 @@ export class CardService {
 
   public disableCardPayment(storeId: number): Observable<Enabled> {
     return this._http.get<Enabled>(this.disableUrl + storeId);
+  }
+
+  public getInvoiceResponse(requestId: number): Observable<InvoiceResponse> {
+    return this._http.get<InvoiceResponse>(this.invoiceUrl + requestId);
   }
 }

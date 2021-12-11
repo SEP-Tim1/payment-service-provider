@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import psp.payment.card.dtos.IsEnabledDTO;
 import psp.payment.card.dtos.MerchantInfoDTO;
 import psp.payment.card.dtos.PaymentRequest;
+import psp.payment.card.exceptions.InvoiceNotValidException;
 import psp.payment.card.exceptions.MerchantCredentialsNotValidException;
+import psp.payment.card.exceptions.RequestNotFoundException;
 import psp.payment.card.exceptions.StoreNotFoundException;
 import psp.payment.card.service.CardService;
 
@@ -45,8 +47,6 @@ public class CardController {
         try {
             cardService.enable(dto, storeId);
             return ResponseEntity.ok(new IsEnabledDTO(true));
-        } catch (StoreNotFoundException e) {
-            return ResponseEntity.badRequest().body("Store not found.");
         } catch (MerchantCredentialsNotValidException e) {
             return ResponseEntity.badRequest().body("Invalid credentials!");
         }
@@ -59,6 +59,15 @@ public class CardController {
             return ResponseEntity.ok(new IsEnabledDTO(false));
         } catch (StoreNotFoundException e) {
             return ResponseEntity.badRequest().body("Store not found.");
+        }
+    }
+
+    @GetMapping("/invoice/{requestId}")
+    public ResponseEntity<?> getInvoiceResponse(@PathVariable long requestId){
+        try {
+            return ResponseEntity.ok(cardService.getInvoiceResponse(requestId));
+        } catch (RequestNotFoundException | StoreNotFoundException | InvoiceNotValidException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
