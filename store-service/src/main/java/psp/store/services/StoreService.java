@@ -1,5 +1,6 @@
 package psp.store.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import psp.store.exceptions.NotFoundException;
@@ -8,6 +9,7 @@ import psp.store.repositories.StoreRepository;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class StoreService {
 
@@ -21,7 +23,8 @@ public class StoreService {
         store = repository.save(store);
         String apiToken = tokenService.generateToken(store);
         store.setApiToken(apiToken);
-        repository.save(store);
+        store = repository.save(store);
+        log.info("Store (id=" + store.getId() + ") created");
     }
 
     public Store getByUserId(long userId) {
@@ -31,6 +34,7 @@ public class StoreService {
     public long getIdByApiToken(String apiToken) throws NotFoundException {
         Optional<Store> store = repository.getByApiToken(apiToken);
         if(store.isEmpty()) {
+            log.warn("Store extraction attempt from an invalid API Token");
             throw new NotFoundException("Store not found");
         }
         return store.get().getId();

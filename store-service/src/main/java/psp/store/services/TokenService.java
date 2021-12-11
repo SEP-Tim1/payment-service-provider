@@ -1,15 +1,15 @@
 package psp.store.services;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import psp.store.exceptions.NotFoundException;
 import psp.store.model.Store;
 
 import java.util.Date;
 
+@Slf4j
 @Service
 public class TokenService {
 
@@ -26,33 +26,15 @@ public class TokenService {
     private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
     public String generateToken(Store store){
-        return Jwts.builder()
+        String apiToken = Jwts.builder()
                 .setIssuer(APP_NAME)
                 .setSubject(Long.toString(store.getId()))
                 .setAudience(generateAudience())
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
                 .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
-    }
-
-    public long getStore(String token) throws NotFoundException {
-        try {
-            return getStoreFromToken(token);
-        } catch (Exception e) {
-            throw new NotFoundException("Store could not be extracted");
-        }
-    }
-
-    private long getStoreFromToken(String token) {
-        final Claims claims = this.getAllClaimsFromToken(token);
-        return Long.parseLong(claims.getSubject());
-    }
-
-    private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET)
-                .parseClaimsJws(token)
-                .getBody();
+        log.info("Token generated for a store (id=" + store.getId() + ")");
+        return apiToken;
     }
 
     private String generateAudience(){
