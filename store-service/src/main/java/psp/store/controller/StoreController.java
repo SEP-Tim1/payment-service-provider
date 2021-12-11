@@ -1,5 +1,6 @@
 package psp.store.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import psp.store.client.AuthClient;
@@ -11,6 +12,7 @@ import psp.store.services.StoreService;
 
 import java.util.Arrays;
 
+@Slf4j
 @RestController
 @RequestMapping("store")
 public class StoreController {
@@ -23,9 +25,11 @@ public class StoreController {
     @PostMapping("{name}")
     public void create(@PathVariable String name, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
         if (token == null) {
+            log.warn("Unauthenticated user made an attempt to create a store");
             throw new UnauthenticatedException("You are not logged in");
         }
         if(!authClient.hasRoles(token, Arrays.asList("MERCHANT"))) {
+            log.warn("Unauthorized user made an attempt to create a store");
             throw new UnauthorizedException("You don't have a permission to create a store");
         }
         long userId = authClient.getUserId(token);
@@ -35,9 +39,11 @@ public class StoreController {
     @GetMapping
     public Store get(@RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
         if (token == null) {
+            log.warn("Unauthenticated user made an attempt to fetch store's info");
             throw new UnauthenticatedException("You are not logged in");
         }
         if(!authClient.hasRoles(token, Arrays.asList("MERCHANT"))) {
+            log.warn("Unauthorized user made an attempt to fetch store's info");
             throw new UnauthorizedException("You don't have a permission to view store info");
         }
         long userId = authClient.getUserId(token);
