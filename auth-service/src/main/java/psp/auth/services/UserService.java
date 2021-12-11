@@ -25,24 +25,27 @@ public class UserService {
     private TokenService tokenService;
 
     public void registerMerchant(UserDTO dto) throws NotUniqueException, NoSuchAlgorithmException, InvalidKeySpecException {
-        log.info("Registration attempted");
         if(repository.existsByUsername(dto.getUsername())) {
-            log.info("Username taken");
+            log.warn("Registration with taken username attempted");
             throw new NotUniqueException("User with provided username already exists!");
         }
         User user = new User(dto.getUsername(), PasswordEncoder.encode(dto.getPassword()), Role.MERCHANT);
         user = repository.save(user);
-        log.info("User with id=" + user.getId() + " successfully registered");
+        log.info("User (id=" + user.getId() + ") created");
     }
 
     public String logIn(UserDTO dto) throws NotFoundException, InvalidArgumentException {
         if (!repository.existsByUsername(dto.getUsername())) {
+            log.warn("Login with unknown username attempted");
             throw new NotFoundException("User with provided username does not exist");
         }
         User user = repository.findByUsername(dto.getUsername());
         if (!PasswordEncoder.equals(dto.getPassword(), user.getPassword())) {
+            log.warn("Login with incorrect password attempted");
             throw new InvalidArgumentException("Password incorrect");
         }
-        return tokenService.generateToken(user);
+        String token = tokenService.generateToken(user);
+        log.info("User (id=" + user.getId() + ") logged in");
+        return token;
     }
 }
