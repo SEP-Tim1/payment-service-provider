@@ -1,4 +1,5 @@
 @echo off
+start java -jar zipkin-server-2.23.9-exec.jar
 start java -jar registry/target/registry-0.0.1-SNAPSHOT.jar
 start java -jar gateway/target/gateway-0.0.1-SNAPSHOT.jar
 start java -jar auth-service/target/auth-0.0.1-SNAPSHOT.jar
