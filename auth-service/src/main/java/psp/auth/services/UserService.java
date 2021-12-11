@@ -25,7 +25,6 @@ public class UserService {
     private TokenService tokenService;
 
     public void registerMerchant(UserDTO dto) throws NotUniqueException, NoSuchAlgorithmException, InvalidKeySpecException {
-        log.info("Registration attempted");
         if(repository.existsByUsername(dto.getUsername())) {
             log.warn("Registration with taken username attempted");
             throw new NotUniqueException("User with provided username already exists!");
