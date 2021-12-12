@@ -1,11 +1,11 @@
 package psp.payment.card.service;
 
-import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import psp.payment.card.client.Bank1Client;
 import psp.payment.card.client.Bank2Client;
 import psp.payment.card.client.Client;
+import psp.payment.card.client.WebShopClient;
 import psp.payment.card.dtos.*;
 import psp.payment.card.exceptions.InvoiceNotValidException;
 import psp.payment.card.exceptions.MerchantCredentialsNotValidException;
@@ -22,13 +22,16 @@ public class CardService {
     private final Client client;
     private final Bank1Client bank1;
     private final Bank2Client bank2;
+    private final WebShopClient webShopClient;
 
     @Autowired
-    public CardService(CardRepository cardRepository, Client client, Bank1Client bank1, Bank2Client bank2) {
+    public CardService(CardRepository cardRepository, Client client, Bank1Client bank1, Bank2Client bank2, WebShopClient webShopClient) {
         this.cardRepository = cardRepository;
         this.client = client;
         this.bank1 = bank1;
         this.bank2 = bank2;
+
+        this.webShopClient = webShopClient;
     }
 
     public Card getByStoreId(PaymentRequest request) throws StoreNotFoundException {
@@ -65,7 +68,8 @@ public class CardService {
         cardRepository.save(card);
     }
 
-    public InvoiceResponseDTO getInvoiceResponse(long requestId) throws RequestNotFoundException, StoreNotFoundException, InvoiceNotValidException {
+
+    public InvoiceResponseDTO getInvoiceResponse(long requestId) throws StoreNotFoundException, InvoiceNotValidException, RequestNotFoundException {
         try {
             PaymentRequest request = getByRequestId(requestId);
             Card card = getByStoreId(request.getStoreId());
@@ -74,8 +78,16 @@ public class CardService {
             throw new StoreNotFoundException();
         } catch (InvoiceNotValidException ie) {
             throw new InvoiceNotValidException();
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new RequestNotFoundException();
+        }
+    }
+
+    public void sendPaymentResponseToWebShop(PaymentResponseDTO dto){
+        try {
+            webShopClient.bankPaymentResponse(dto);
+        } catch(Exception e) {
+            e.printStackTrace();
         }
     }
 
