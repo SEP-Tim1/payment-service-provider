@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import psp.request.clients.StoreClient;
 import psp.request.dtos.PaymentRequestDTO;
 import psp.request.dtos.PaymentResponseDTO;
+import psp.request.dtos.PaymentResponseIdDTO;
 import psp.request.exceptions.NotFoundException;
 import psp.request.model.PaymentRequest;
 import psp.request.repositories.PaymentRequestRepository;
@@ -23,7 +24,7 @@ public class PaymentRequestService {
         this.storeClient = storeClient;
     }
 
-    public PaymentResponseDTO create(PaymentRequestDTO dto) throws NotFoundException {
+    public PaymentResponseIdDTO create(PaymentRequestDTO dto) throws NotFoundException {
         long storeId;
         try {
             storeId = storeClient.getIdByApiToken(dto.getApiToken());
@@ -41,7 +42,7 @@ public class PaymentRequestService {
                 dto.getErrorUrl()
         );
         request = repository.save(request);
-        return new PaymentResponseDTO(request.getId());
+        return new PaymentResponseIdDTO(request.getId());
     }
 
     public PaymentRequest getById(long id) throws NotFoundException {
@@ -56,5 +57,15 @@ public class PaymentRequestService {
             throw new NotFoundException("Request not found");
         }
         return request.get().getFailureUrl();
+    }
+
+    public void setFlags(PaymentResponseDTO dto) throws NotFoundException {
+        if(repository.findById(dto.getRequestId()).isEmpty()) {
+            throw new NotFoundException("Request not found");
+        }
+        PaymentRequest request = repository.findById(dto.getRequestId()).get();
+        request.setProcessed(true);
+        request.setSuccessful(dto.getTransactionStatus().equals("SUCCESS"));
+        repository.save(request);
     }
 }

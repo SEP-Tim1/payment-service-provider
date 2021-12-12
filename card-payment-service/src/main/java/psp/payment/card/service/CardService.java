@@ -86,6 +86,7 @@ public class CardService {
     public void sendPaymentResponseToWebShop(PaymentResponseDTO dto){
         try {
             webShopClient.bankPaymentResponse(dto);
+            client.setPaymentRequestFlags(dto);
         } catch(Exception e) {
             e.printStackTrace();
         }

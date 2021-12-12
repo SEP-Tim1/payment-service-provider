@@ -4,10 +4,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class PaymentResponseDTO {
+    private String transactionStatus;
+
+    private long merchantOrderId;
 
     private long requestId;
+
+    private long acquirerOrderId;
+
+    private LocalDateTime acquirerTimestamp;
+
+    private long paymentId;
+
+    private String errorMessage;
 }

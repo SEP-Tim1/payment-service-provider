@@ -15,6 +15,7 @@ public class InvoiceDTO {
     private String mPassword;
     private float amount;
     private long merchantOrderId;
+    private long requestId;
     private LocalDateTime merchantTimestamp;
     private String successUrl;
     private String failureUrl;
@@ -25,6 +26,7 @@ public class InvoiceDTO {
         this.mPassword = card.getMpassword();
         this.amount = request.getAmount();
         this.merchantOrderId = request.getMerchantOrderId();
+        this.requestId = request.getId();
         this.merchantTimestamp = request.getMerchantTimestamp();
         this.successUrl = request.getSuccessUrl();
         this.failureUrl = request.getFailureUrl();
