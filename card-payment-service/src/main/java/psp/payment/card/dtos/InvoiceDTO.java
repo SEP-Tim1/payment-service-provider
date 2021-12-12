@@ -26,11 +26,9 @@ public class InvoiceDTO {
         this.amount = request.getAmount();
         this.merchantOrderId = request.getMerchantOrderId();
         this.merchantTimestamp = request.getMerchantTimestamp();
-
-        //TODO dodati urlove
-        this.successUrl = "";
-        this.failureUrl = "";
-        this.errorUrl = "";
+        this.successUrl = request.getSuccessUrl();
+        this.failureUrl = request.getFailureUrl();
+        this.errorUrl = request.getErrorUrl();
     }
 }
 

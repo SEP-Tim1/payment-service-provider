@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import psp.payment.card.dtos.IsEnabledDTO;
 import psp.payment.card.dtos.MerchantInfoDTO;
 import psp.payment.card.dtos.PaymentRequest;
+import psp.payment.card.dtos.PaymentResponseDTO;
 import psp.payment.card.exceptions.InvoiceNotValidException;
 import psp.payment.card.exceptions.MerchantCredentialsNotValidException;
 import psp.payment.card.exceptions.RequestNotFoundException;
@@ -69,5 +70,10 @@ public class CardController {
         } catch (RequestNotFoundException | StoreNotFoundException | InvoiceNotValidException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PostMapping("bank-payment-response")
+    public void bankPaymentResponse(@RequestBody PaymentResponseDTO dto){
+
     }
 }
