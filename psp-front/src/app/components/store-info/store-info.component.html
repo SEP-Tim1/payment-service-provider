@@ -1,27 +1,22 @@
-<div
-  style="
-    width: 50%;
-    margin-left: 25%;
-    margin-top: 10%;
-    padding: 30px;
-    background-color: whitesmoke;
-  "
-  class="mat-elevation-z8"
->
-  <h1 style="text-align: center">{{ store.name }}</h1>
-  <h3 style="text-align: center">Your token</h3>
-  <div style="width: 100%; word-break: break-all; word-wrap: break-word">
-    {{ store.apiToken }}
-  </div>
-  <div class="buttondiv">
-    <button
-      id="paymentButton"
-      mat-raised-button
-      color="primary"
-      style="padding: 8 3px; width: 50%; height: 50px"
-      (click)="subscriptionsPage()"
-    >
-      Payment Subscriptions
-    </button>
-  </div>
+<div style="padding-top: 10%">
+  <mat-card
+    style="width: 50%; margin-left: 25%; opacity: 80%; padding-bottom: 3%"
+  >
+    <h1 style="text-align: center">{{ store.name }}</h1>
+    <h3 style="text-align: center">Your token</h3>
+    <div style="width: 100%; word-break: break-all; word-wrap: break-word">
+      {{ store.apiToken }}
+    </div>
+    <div class="buttondiv">
+      <button
+        id="paymentButton"
+        mat-raised-button
+        color="primary"
+        style="padding: 8 3px; width: 50%; height: 50px"
+        (click)="subscriptionsPage()"
+      >
+        Payment Subscriptions
+      </button>
+    </div>
+  </mat-card>
 </div>

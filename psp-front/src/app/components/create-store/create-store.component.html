@@ -1,15 +1,33 @@
-<h1 style="text-align: center; margin: 20px">Create your store</h1>
-<mat-form-field style="width: 60%; margin-left: 20%;">
-    <mat-label>Name</mat-label>
-    <textarea
-      id="nameeInput"
-      #name="ngModel"
-      name="namee"
-      matInput
-      required
-      cdkTextareaAutosize
-      [(ngModel)]="namee"
-      style="height: 40%"
-    ></textarea>
-</mat-form-field>
-<button mat-raised-button (click)="create()" style="width: 20%; margin-left: 40%;" [disabled]="namee === ''">Create</button>
+<div style="padding-top: 10%">
+  <mat-card
+    style="width: 50%; margin-left: 25%; opacity: 80%; padding-bottom: 3%"
+  >
+    <form>
+      <h1 style="text-align: center">Create your store</h1>
+      <mat-form-field style="width: 80%; margin-bottom: 3%">
+        <mat-label>Name</mat-label>
+        <textarea
+          id="nameeInput"
+          #name="ngModel"
+          name="namee"
+          matInput
+          required
+          cdkTextareaAutosize
+          [(ngModel)]="namee"
+          style="height: 40%"
+        ></textarea>
+      </mat-form-field>
+      <button
+        mat-raised-button
+        id="createButton"
+        (click)="create()"
+        color="primary"
+        type="button"
+        style="padding: 8 3px; width: 50%; height: 50px"
+        [disabled]="namee === ''"
+      >
+        Create
+      </button>
+    </form>
+  </mat-card>
+</div>

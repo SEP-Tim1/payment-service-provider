@@ -1,48 +1,53 @@
-<form (submit)="triggerAction()" #feedform="ngForm" novalidate>
-    <h2 style="text-align: center">{{title}}</h2>
+<form
+  (submit)="triggerAction()"
+  #feedform="ngForm"
+  novalidate
+  style="width: 100%"
+>
+  <h2 style="text-align: center">{{ title }}</h2>
 
-    <div>
-      <mat-form-field style="width: 100%">
-        <mat-label>Username</mat-label>
-        <textarea
-          id="usernameInput"
-          #name="ngModel"
-          name="username"
-          matInput
-          required
-          cdkTextareaAutosize
-          [(ngModel)]="user.username"
-          style="height: 40%"
-        ></textarea>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field style="width: 100%">
-        <mat-label>Password</mat-label>
-        <input
-          id="passwordInput"
-          #name2="ngModel"
-          name="password"
-          type="password"
-          matInput
-          required
-          cdkTextareaAutosize
-          [(ngModel)]="user.password"
-          style="height: 40%"
-        />
-      </mat-form-field>
-    </div>
+  <div>
+    <mat-form-field style="width: 100%">
+      <mat-label>Username</mat-label>
+      <textarea
+        id="usernameInput"
+        #name="ngModel"
+        name="username"
+        matInput
+        required
+        cdkTextareaAutosize
+        [(ngModel)]="user.username"
+        style="height: 40%"
+      ></textarea>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field style="width: 100%">
+      <mat-label>Password</mat-label>
+      <input
+        id="passwordInput"
+        #name2="ngModel"
+        name="password"
+        type="password"
+        matInput
+        required
+        cdkTextareaAutosize
+        [(ngModel)]="user.password"
+        style="height: 40%"
+      />
+    </mat-form-field>
+  </div>
 
-    <div style="text-align: center; margin-top: 50px">
-      <button
-        id="loginButton"
-        [disabled]="name.invalid || name2.invalid"
-        mat-raised-button
-        color="primary"
-        type="submit"
-        style="padding: 12px 32px; opacity: 120%"
-      >
-        {{action}}
-      </button>
-    </div>
+  <div style="text-align: center; margin-top: 50px">
+    <button
+      id="loginButton"
+      [disabled]="name.invalid || name2.invalid"
+      mat-raised-button
+      color="primary"
+      type="submit"
+      style="padding: 12px 32px; opacity: 120%"
+    >
+      {{ action }}
+    </button>
+  </div>
 </form>
