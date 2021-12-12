@@ -70,5 +70,7 @@ public class PaymentRequestService {
         request.setProcessed(true);
         request.setSuccessful(dto.getTransactionStatus().equals("SUCCESS"));
         repository.save(request);
+        log.info("Payment request (id=" + request.getId() + ") flags set to processed="
+                + request.isProcessed() + "and successful=" + request.isSuccessful());
     }
 }
