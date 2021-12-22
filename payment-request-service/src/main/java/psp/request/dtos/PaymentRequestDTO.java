@@ -18,4 +18,5 @@ public class PaymentRequestDTO {
     private String successUrl;
     private String failureUrl;
     private String errorUrl;
+    private String callbackUrl;
 }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import psp.payment.card.dtos.PaymentOutcomeDTO;
 import psp.payment.card.dtos.PaymentRequest;
 import psp.payment.card.dtos.PaymentResponseDTO;
 
@@ -14,6 +15,6 @@ public interface Client {
     @GetMapping("request/{id}")
     PaymentRequest getById(@PathVariable long id);
 
-    @PostMapping("request/update")
-    void setPaymentRequestFlags(@RequestBody PaymentResponseDTO dto);
+    @PostMapping("request/outcome/{id}")
+    void setPaymentRequestOutcome(@PathVariable long id, @RequestBody PaymentOutcomeDTO outcome);
 }

@@ -9,4 +9,7 @@ public interface StoreClient {
 
     @GetMapping("store/id/{apiToken}")
     long getIdByApiToken(@PathVariable String apiToken);
+
+    @GetMapping("store/token/{id}")
+    String getApiTokenById(@PathVariable long id);
 }

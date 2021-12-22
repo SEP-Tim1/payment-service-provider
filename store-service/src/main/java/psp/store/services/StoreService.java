@@ -39,4 +39,12 @@ public class StoreService {
         }
         return store.get().getId();
     }
+
+    public String getApiTokenById(long id) throws NotFoundException {
+        Optional<Store> store = repository.findById(id);
+        if(store.isEmpty()) {
+            throw new NotFoundException("Store not found");
+        }
+        return store.get().getApiToken();
+    }
 }

@@ -20,8 +20,9 @@ public class InvoiceDTO {
     private String successUrl;
     private String failureUrl;
     private String errorUrl;
+    private String callbackUrl;
 
-    public InvoiceDTO(PaymentRequest request, Card card){
+    public InvoiceDTO(PaymentRequest request, Card card, String callbackUrl){
         this.mId = card.getMid();
         this.mPassword = card.getMpassword();
         this.amount = request.getAmount();
@@ -31,6 +32,7 @@ public class InvoiceDTO {
         this.successUrl = request.getSuccessUrl();
         this.failureUrl = request.getFailureUrl();
         this.errorUrl = request.getErrorUrl();
+        this.callbackUrl = callbackUrl;
     }
 }
 

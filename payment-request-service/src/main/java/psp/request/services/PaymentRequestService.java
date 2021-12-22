@@ -4,13 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import psp.request.clients.StoreClient;
+import psp.request.clients.WebStoreClient;
+import psp.request.dtos.PaymentOutcomeDTO;
 import psp.request.dtos.PaymentRequestDTO;
-import psp.request.dtos.PaymentResponseDTO;
 import psp.request.dtos.PaymentResponseIdDTO;
 import psp.request.exceptions.NotFoundException;
+import psp.request.model.PaymentOutcome;
 import psp.request.model.PaymentRequest;
 import psp.request.repositories.PaymentRequestRepository;
 
+import java.net.URI;
 import java.util.Optional;
 
 @Slf4j
@@ -19,11 +22,13 @@ public class PaymentRequestService {
 
     private final PaymentRequestRepository repository;
     private final StoreClient storeClient;
+    private final WebStoreClient webStoreClient;
 
     @Autowired
-    public PaymentRequestService(PaymentRequestRepository repository, StoreClient storeClient) {
+    public PaymentRequestService(PaymentRequestRepository repository, StoreClient storeClient, WebStoreClient webStoreClient) {
         this.repository = repository;
         this.storeClient = storeClient;
+        this.webStoreClient = webStoreClient;
     }
 
     public PaymentResponseIdDTO create(PaymentRequestDTO dto) throws NotFoundException {
@@ -41,7 +46,8 @@ public class PaymentRequestService {
                 dto.getAmount(),
                 dto.getSuccessUrl(),
                 dto.getFailureUrl(),
-                dto.getErrorUrl()
+                dto.getErrorUrl(),
+                dto.getCallbackUrl()
         );
         request = repository.save(request);
         log.info("Payment request (id=" + request.getId() + ") created");
@@ -62,15 +68,14 @@ public class PaymentRequestService {
         return request.get().getFailureUrl();
     }
 
-    public void setFlags(PaymentResponseDTO dto) throws NotFoundException {
-        if(repository.findById(dto.getRequestId()).isEmpty()) {
+    public void setOutcome(long requestId, PaymentOutcome outcome) throws NotFoundException {
+        if(repository.findById(requestId).isEmpty()) {
             throw new NotFoundException("Request not found");
         }
-        PaymentRequest request = repository.findById(dto.getRequestId()).get();
-        request.setProcessed(true);
-        request.setSuccessful(dto.getTransactionStatus().equals("SUCCESS"));
+        PaymentRequest request = repository.findById(requestId).get();
+        request.setOutcome(outcome);
         repository.save(request);
-        log.info("Payment request (id=" + request.getId() + ") flags set to processed="
-                + request.isProcessed() + "and successful=" + request.isSuccessful());
+        log.info("Payment request (id=" + request.getId() + ") outcome set to status=" + request.getOutcome().getStatus());
+        this.webStoreClient.process(URI.create(request.getCallbackUrl()), new PaymentOutcomeDTO(request.getMerchantOrderId(), outcome.getStatus(), outcome.getMessage()));
     }
 }

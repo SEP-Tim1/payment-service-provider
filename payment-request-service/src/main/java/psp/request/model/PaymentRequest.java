@@ -31,11 +31,11 @@ public class PaymentRequest {
     @Column
     private String errorUrl;
     @Column
-    private boolean processed;
-    @Column
-    private boolean successful;
+    private String callbackUrl;
+    @Embedded
+    private PaymentOutcome outcome;
 
-    public PaymentRequest(long storeId, long merchantOrderId, LocalDateTime merchantTimestamp, float amount, String successUrl, String failureUrl, String errorUrl) {
+    public PaymentRequest(long storeId, long merchantOrderId, LocalDateTime merchantTimestamp, float amount, String successUrl, String failureUrl, String errorUrl, String callbackUrl) {
         this.storeId = storeId;
         this.merchantOrderId = merchantOrderId;
         this.merchantTimestamp = merchantTimestamp;
@@ -43,5 +43,6 @@ public class PaymentRequest {
         this.successUrl = successUrl;
         this.failureUrl = failureUrl;
         this.errorUrl = errorUrl;
+        this.callbackUrl = callbackUrl;
     }
 }

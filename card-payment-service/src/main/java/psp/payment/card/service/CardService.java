@@ -2,11 +2,12 @@ package psp.payment.card.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 import psp.payment.card.client.Bank1Client;
 import psp.payment.card.client.Bank2Client;
 import psp.payment.card.client.Client;
-import psp.payment.card.client.WebShopClient;
 import psp.payment.card.dtos.*;
 import psp.payment.card.exceptions.InvoiceNotValidException;
 import psp.payment.card.exceptions.MerchantCredentialsNotValidException;
@@ -15,25 +16,27 @@ import psp.payment.card.exceptions.StoreNotFoundException;
 import psp.payment.card.model.Card;
 import psp.payment.card.repositories.CardRepository;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class CardService {
 
     private final CardRepository cardRepository;
-
     private final Client client;
     private final Bank1Client bank1;
     private final Bank2Client bank2;
-    private final WebShopClient webShopClient;
+    private final TransactionService transactionService;
+    private DiscoveryClient discoveryClient;
 
     @Autowired
-    public CardService(CardRepository cardRepository, Client client, Bank1Client bank1, Bank2Client bank2, WebShopClient webShopClient) {
+    public CardService(CardRepository cardRepository, Client client, Bank1Client bank1, Bank2Client bank2, TransactionService transactionService, DiscoveryClient discoveryClient) {
         this.cardRepository = cardRepository;
         this.client = client;
         this.bank1 = bank1;
         this.bank2 = bank2;
-
-        this.webShopClient = webShopClient;
+        this.transactionService = transactionService;
+        this.discoveryClient = discoveryClient;
     }
 
     public Card getByStoreId(PaymentRequest request) throws StoreNotFoundException {
@@ -76,7 +79,11 @@ public class CardService {
         try {
             PaymentRequest request = getByRequestId(requestId);
             Card card = getByStoreId(request.getStoreId());
-            return sendInvoice(new InvoiceDTO(request, card), card.getBank());
+            List<ServiceInstance> gateway = discoveryClient.getInstances("gateway");
+            String host = gateway.get(0).getHost();
+            int port = gateway.get(0).getPort();
+            String callbackUrl = "http://" + host + ":" + port + "/card/card/bank-payment-response";
+            return sendInvoice(new InvoiceDTO(request, card, callbackUrl), card.getBank());
         } catch (StoreNotFoundException se) {
             throw new StoreNotFoundException();
         } catch (InvoiceNotValidException ie) {
@@ -86,12 +93,14 @@ public class CardService {
         }
     }
 
-    public void sendPaymentResponseToWebShop(PaymentResponseDTO dto){
+    public void setPaymentOutcome(PaymentResponseDTO dto){
         try {
-            webShopClient.bankPaymentResponse(dto);
-            client.setPaymentRequestFlags(dto);
+            transactionService.save(dto);
+            client.setPaymentRequestOutcome(dto.getRequestId(), new PaymentOutcomeDTO(
+                    PaymentStatusDTO.valueOf(dto.getTransactionStatus()),
+                    dto.getErrorMessage()));
         } catch(Exception e) {
-            e.printStackTrace();
+            return;
         }
     }
 

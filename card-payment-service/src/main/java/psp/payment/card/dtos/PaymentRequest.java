@@ -19,7 +19,4 @@ public class PaymentRequest {
     private String successUrl;
     private String failureUrl;
     private String errorUrl;
-    private boolean processed;
-    private boolean successful;
-
 }

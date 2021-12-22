@@ -2,9 +2,9 @@ package psp.request.controllers;
 
 import org.springframework.web.bind.annotation.*;
 import psp.request.dtos.PaymentRequestDTO;
-import psp.request.dtos.PaymentResponseDTO;
 import psp.request.dtos.PaymentResponseIdDTO;
 import psp.request.exceptions.NotFoundException;
+import psp.request.model.PaymentOutcome;
 import psp.request.model.PaymentRequest;
 import psp.request.services.PaymentRequestService;
 
@@ -33,8 +33,8 @@ public class PaymentRequestController {
         return service.getById(id);
     }
 
-    @PostMapping("update")
-    public void setPaymentRequestFlags(@RequestBody PaymentResponseDTO dto) throws NotFoundException {
-        service.setFlags(dto);
+    @PostMapping("outcome/{id}")
+    public void setOutcome(@PathVariable long id, @RequestBody PaymentOutcome outcome) throws NotFoundException {
+        service.setOutcome(id, outcome);
     }
 }

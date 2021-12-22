@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import psp.payment.card.dtos.PaymentResponseDTO;
 
-@FeignClient(url= "localhost:8050", name = "web-shop-back")
-public interface WebShopClient {
-    @PostMapping("purchase/bank-payment-response")
-    void bankPaymentResponse(@RequestBody PaymentResponseDTO dto);
+import java.net.URI;
+
+@FeignClient(name = "a", url="a")
+public interface WebStoreClient {
+    @PostMapping
+    void process(URI baseUri, @RequestBody PaymentResponseDTO dto);
 }

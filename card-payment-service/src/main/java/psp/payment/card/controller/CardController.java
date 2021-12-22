@@ -73,7 +73,7 @@ public class CardController {
     }
 
     @PostMapping("bank-payment-response")
-    public void bankPaymentResponse(@RequestBody PaymentResponseDTO dto){
-        cardService.sendPaymentResponseToWebShop(dto);
+    public void setPaymentOutcome(@RequestBody PaymentResponseDTO dto){
+        cardService.setPaymentOutcome(dto);
     }
 }
