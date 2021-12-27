@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import psp.payment.card.model.Card;
+import psp.payment.card.model.Currency;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ public class InvoiceDTO {
     private long mId;
     private String mPassword;
     private float amount;
+    private Currency currency;
     private long merchantOrderId;
     private long requestId;
     private LocalDateTime merchantTimestamp;
@@ -26,6 +28,7 @@ public class InvoiceDTO {
         this.mId = card.getMid();
         this.mPassword = card.getMpassword();
         this.amount = request.getAmount();
+        this.currency = request.getCurrency();
         this.merchantOrderId = request.getMerchantOrderId();
         this.requestId = request.getId();
         this.merchantTimestamp = request.getMerchantTimestamp();

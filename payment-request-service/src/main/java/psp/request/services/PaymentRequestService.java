@@ -44,6 +44,7 @@ public class PaymentRequestService {
                 dto.getMerchantOrderId(),
                 dto.getMerchantTimestamp(),
                 dto.getAmount(),
+                dto.getCurrency(),
                 dto.getSuccessUrl(),
                 dto.getFailureUrl(),
                 dto.getErrorUrl(),
