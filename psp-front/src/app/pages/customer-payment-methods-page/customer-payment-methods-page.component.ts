@@ -54,6 +54,17 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
     );
   }
 
+  bitcoinPayment() {
+    this.bitcoinService.createCharge(this.requestId).subscribe(
+      redirectUrl => {
+        window.location.href = redirectUrl;
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
   checkAvailablePaymentMethods() {
     this.checkCard();
   }

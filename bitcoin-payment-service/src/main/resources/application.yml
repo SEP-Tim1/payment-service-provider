@@ -43,3 +43,10 @@ server:
 
 gateway:
   url: http://localhost:8090/
+
+opennode:
+  url: https://dev-api.opennode.com/v1/
+  checkout: https://dev-checkout.opennode.com/
+
+callback:
+  url: http://140d-93-87-163-61.ngrok.io/

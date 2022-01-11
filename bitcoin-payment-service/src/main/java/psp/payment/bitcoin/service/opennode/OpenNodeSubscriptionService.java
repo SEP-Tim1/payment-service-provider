@@ -43,4 +43,12 @@ public class OpenNodeSubscriptionService implements SubscriptionService {
     public boolean exists(long storeId) {
         return repository.findByStoreId(storeId).isPresent();
     }
+
+    @Override
+    public String getApiKey(long storeId) throws NotFoundException {
+        if (!exists(storeId)) {
+            throw new NotFoundException("Store not found");
+        }
+        return repository.findByStoreId(storeId).get().getApiKey();
+    }
 }

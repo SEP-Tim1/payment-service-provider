@@ -7,4 +7,5 @@ public interface SubscriptionService {
     void create(long storeId, String apiKey);
     void delete(long storeId) throws NotFoundException;
     boolean exists(long storeId);
+    String getApiKey(long storeId) throws NotFoundException;
 }

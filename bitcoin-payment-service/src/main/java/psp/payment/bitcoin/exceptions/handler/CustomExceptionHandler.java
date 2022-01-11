@@ -21,6 +21,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
         log.error("Unhandled exception", e);
+        e.printStackTrace();
         return new ResponseEntity<>(GENERIC_ERROR_RESPONSE, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

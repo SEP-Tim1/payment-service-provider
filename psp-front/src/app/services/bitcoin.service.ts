@@ -28,4 +28,8 @@ export class BitcoinService {
   isEnabledForRequest(requestId: number): Observable<boolean> {
     return this._http.get<boolean>(this.paymentBaseUrl + requestId);
   }
+
+  createCharge(requestId: number): Observable<string> {
+    return this._http.post(this.paymentBaseUrl + requestId, null, { responseType: 'text' });
+  }
 }
