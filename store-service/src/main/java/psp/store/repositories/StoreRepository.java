@@ -11,4 +11,5 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     Store findByUserId(long userId);
     Optional<Store> getByApiToken(String apiToken);
+    Optional<Store> getByUserId(long userId);
 }

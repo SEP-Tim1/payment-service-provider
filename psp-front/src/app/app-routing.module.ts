@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BitcoinSubscriptionComponent } from './pages/bitcoin-subscription/bitcoin-subscription.component';
 import { CustomerPaymentMethodsPageComponent } from './pages/customer-payment-methods-page/customer-payment-methods-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { MerchantInfoPageComponent } from './pages/merchant-info-page/merchant-info-page.component';
@@ -19,6 +20,11 @@ const routes: Routes = [
   {
     path: 'merchant',
     component: MerchantInfoPageComponent,
+    data: { expextedRoles: ['MERCHANT'] },
+  },
+  {
+    path: 'bitcoin',
+    component: BitcoinSubscriptionComponent,
     data: { expextedRoles: ['MERCHANT'] },
   },
   {

@@ -30,6 +30,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomerPaymentMethodsPageComponent } from './pages/customer-payment-methods-page/customer-payment-methods-page.component';
 import { SubscriptionsPageComponent } from './pages/subscriptions-page/subscriptions-page.component';
 import { MerchantInfoPageComponent } from './pages/merchant-info-page/merchant-info-page.component';
+import { BitcoinSubscriptionComponent } from './pages/bitcoin-subscription/bitcoin-subscription.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { MerchantInfoPageComponent } from './pages/merchant-info-page/merchant-i
     CustomerPaymentMethodsPageComponent,
     SubscriptionsPageComponent,
     MerchantInfoPageComponent,
+    BitcoinSubscriptionComponent,
   ],
   imports: [
     BrowserModule,

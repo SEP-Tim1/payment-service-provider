@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { BitcoinService } from 'src/app/services/bitcoin.service';
 import { CardService } from 'src/app/services/card.service';
 
 @Component({
@@ -17,18 +18,22 @@ export class SubscriptionsPageComponent implements OnInit {
 
   constructor(
     private cardService: CardService,
+    private bitcoinService: BitcoinService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    //obrisati kada podaci za store card payment budu uneti u bazu
-    this.paypal = true;
     this.storeId = Number(localStorage.getItem('storeId'));
     this.checkAvailablePaymentMethods();
   }
 
   checkAvailablePaymentMethods() {
+    this.cardPaymentEnabled();
+    this.bitcoinPaymentEnabled();
+  }
+
+  cardPaymentEnabled() {
     this.cardService.isCardPayementEnabledForStore(this.storeId).subscribe(
       (response) => {
         console.log(response);
@@ -38,6 +43,14 @@ export class SubscriptionsPageComponent implements OnInit {
         console.log(error.error);
       }
     );
+  }
+
+  bitcoinPaymentEnabled() {
+    this.bitcoinService.subscribed(this.storeId).subscribe(
+      subscribed => {
+        this.bitcoin = subscribed;
+      }
+    )
   }
 
   cardPayment() {
@@ -57,16 +70,28 @@ export class SubscriptionsPageComponent implements OnInit {
     }
   }
 
+  bitcoinPayment() {
+    if (!this.bitcoin) {
+      this.router.navigate(['bitcoin']);
+    } else {
+      this.bitcoinService.deleteSubscription().subscribe(
+        _ => {
+          this.bitcoin = false;
+          this.openSnackBar("Bitcoin payments are disabled");
+        },
+        error => {
+          this.openSnackBar(error.error);
+        }
+      )
+    }
+  }
+
   paypalToggle() {
     this.paypal = !this.paypal;
   }
 
   qrcodeToggle() {
     this.qrcode = !this.qrcode;
-  }
-
-  bitcoinToggle() {
-    this.bitcoin = !this.bitcoin;
   }
 
   openSnackBar(message: string) {

@@ -40,6 +40,15 @@ public class StoreService {
         return store.get().getId();
     }
 
+    public long getIdByUserId(long userId) throws NotFoundException {
+        Optional<Store> store = repository.getByUserId(userId);
+        if(store.isEmpty()) {
+            log.warn("Store extraction attempt from an invalid user id");
+            throw new NotFoundException("Store not found");
+        }
+        return store.get().getId();
+    }
+
     public String getApiTokenById(long id) throws NotFoundException {
         Optional<Store> store = repository.findById(id);
         if(store.isEmpty()) {

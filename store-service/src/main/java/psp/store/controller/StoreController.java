@@ -59,4 +59,9 @@ public class StoreController {
     public String getApiTokenById(@PathVariable long id) throws NotFoundException {
         return service.getApiTokenById(id);
     }
+
+    @GetMapping("{userId}")
+    public long getIdByUserId(@PathVariable long userId) throws NotFoundException {
+        return service.getIdByUserId(userId);
+    }
 }

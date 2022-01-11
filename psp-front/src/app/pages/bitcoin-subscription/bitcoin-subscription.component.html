@@ -1,0 +1,46 @@
+<div class="div1">
+    <mat-card class="card1">
+      <div class="grid-container">
+        <div class="grid-item">
+          <form
+            (submit)="sendRequest()"
+            #feedform="ngForm"
+            style="width: 100%"
+            novalidate
+          >
+            <h2 style="text-align: center">Insert OpenNode info</h2>
+  
+            <div class="center">
+              <mat-form-field style="width: 100%">
+                <mat-label>Api Key</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="apiKey"
+                  required
+                  name="key"
+                  style="height: 40%"
+                />
+              </mat-form-field>
+            </div>
+  
+            <div
+              style="text-align: center; margin-top: 15px; margin-bottom: 30px"
+            >
+              <button
+                id="sendRequestButton"
+                mat-raised-button
+                [disabled]="
+                  this.apiKey === ''
+                "
+                color="primary"
+                type="submit"
+                style="padding: 8 3px; width: 50%; height: 50px"
+              >
+                Enable Bitcoin Payments
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-card>
+  </div>

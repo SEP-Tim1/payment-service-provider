@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { InvoiceResponse } from 'src/app/model/invoiceResponse';
+import { BitcoinService } from 'src/app/services/bitcoin.service';
 import { CardService } from 'src/app/services/card.service';
 import { PaymentRequestService } from 'src/app/services/payment-request.service';
 
@@ -14,6 +15,7 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private service: PaymentRequestService,
+    private bitcoinService: BitcoinService,
     private cardService: CardService,
     private snackBar: MatSnackBar
   ) {}
@@ -28,10 +30,6 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.requestId = this.getRequestId();
-
-    //obrisati kada podaci za store card payment budu uneti u bazu
-    this.paypal = true;
-
     this.checkAvailablePaymentMethods();
   }
 
@@ -57,17 +55,31 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
   }
 
   checkAvailablePaymentMethods() {
+    this.checkCard();
+  }
+
+  checkCard() {
     this.cardService.isCardPayementEnabled(this.requestId).subscribe(
       (response) => {
-        console.log(response);
         this.card = response.cardPaymentEnabled;
+        this.checkBitcoin();
       },
-      (error) => {
-        console.log(error.error);
-        this.openSnackBar(error.error);
+      _ => {
+        this.checkBitcoin();
       }
     );
+  }
 
+  checkBitcoin() {
+    this.bitcoinService.isEnabledForRequest(this.requestId).subscribe(
+      enabled => {
+        this.bitcoin = enabled;
+        this.checkAll();
+      }
+    )
+  }
+
+  checkAll() {
     if (!this.card && !this.qrcode && !this.paypal && !this.bitcoin) {
       this.service.getFailureUrl(this.requestId).subscribe((redirectUrl) => {
         console.log(redirectUrl);

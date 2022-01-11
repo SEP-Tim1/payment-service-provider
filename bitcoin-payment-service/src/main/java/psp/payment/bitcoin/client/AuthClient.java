@@ -1,4 +1,4 @@
-package psp.store.client;
+package psp.payment.bitcoin.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +11,9 @@ import java.util.List;
 @FeignClient("auth-service")
 public interface AuthClient {
 
-    @GetMapping("token/id")
-    long getUserId(@RequestHeader("Authorization") String token);
-
     @PostMapping("token/role")
     boolean hasRoles(@RequestHeader("Authorization") String token, @RequestBody List<String> roles);
+
+    @GetMapping("token/id")
+    long getUserId(@RequestHeader("Authorization") String token);
 }
