@@ -1,0 +1,45 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    healthcheck:
+      enabled: true
+
+spring:
+  application:
+    name: bitcoin-payment-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/psp-bitcoin
+    username: postgres
+    password: admin
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
+    generate-ddl: true
+  sql:
+    init:
+      mode: always
+  zipkin:
+    baseUrl: http://localhost:9411/
+  sleuth:
+    sampler:
+      probability: 1
+
+server:
+  port: 8089
+  error:
+    include-message: always
+    include-binding-errors: always
+
+gateway:
+  url: http://localhost:8090/

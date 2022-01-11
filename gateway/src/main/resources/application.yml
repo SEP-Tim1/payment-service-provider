@@ -49,6 +49,12 @@ spring:
             - Path=/request/**
           filters:
             - StripPrefix=1
+        - id: bitcoin-payment-service
+          uri: lb://bitcoin-payment-service
+          predicates:
+            - Path=/bitcoin/**
+          filters:
+            - StripPrefix=1
 
 server:
   port: 8090
