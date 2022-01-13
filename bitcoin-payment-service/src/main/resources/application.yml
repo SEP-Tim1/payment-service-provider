@@ -1,18 +1,18 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
     healthcheck:
       enabled: true
 
 spring:
   application:
-    name: bitcoin-payment-service
+    name: ${BITCOIN_SERVICE_NAME:bitcoin-payment-service}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/psp-bitcoin
-    username: postgres
-    password: admin
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/psp-bitcoin
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:admin}
   jpa:
     database: postgresql
     hibernate:
@@ -30,23 +30,26 @@ spring:
     init:
       mode: always
   zipkin:
-    baseUrl: http://localhost:9411/
+    baseUrl: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
   sleuth:
     sampler:
       probability: 1
 
 server:
-  port: 8089
+  port: ${BITCOIN_SERVICE_PORT:8089}
   error:
     include-message: always
     include-binding-errors: always
 
-gateway:
-  url: http://localhost:8090/
-
-opennode:
-  url: https://dev-api.opennode.com/v1/
-  checkout: https://dev-checkout.opennode.com/
-
-callback:
-  url: http://140d-93-87-163-61.ngrok.io/
+service:
+  auth:
+    name: ${AUTH_SERVICE_NAME:auth-service}
+  payment-request:
+    name: ${PAYMENT_REQUEST_SERVICE_NAME:payment-request-service}
+  store:
+    name: ${STORE_SERVICE_NAME:store-service}
+  opennode:
+    url: https://dev-api.opennode.com/v1/
+    checkout: https://dev-checkout.opennode.com/
+  ngrok:
+    url: http://0879-93-87-163-61.ngrok.io/

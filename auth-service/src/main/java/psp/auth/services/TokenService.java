@@ -18,7 +18,7 @@ public class TokenService {
     @Value("web-shop-back")
     private String APP_NAME;
 
-    @Value("5B43E507D0762852D06EEDD2E30A24F10ABC72AC114D60D6BB592A15BC505B8E")
+    @Value("${jwt.secret}")
     private String SECRET;
 
     //Token expiry date (3 days)

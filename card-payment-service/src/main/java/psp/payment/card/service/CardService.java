@@ -2,6 +2,7 @@ package psp.payment.card.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import psp.payment.card.exceptions.MerchantCredentialsNotValidException;
 import psp.payment.card.exceptions.RequestNotFoundException;
 import psp.payment.card.exceptions.StoreNotFoundException;
 import psp.payment.card.model.Card;
+import psp.payment.card.model.Transaction;
 import psp.payment.card.repositories.CardRepository;
 
 import java.util.List;
@@ -28,6 +30,8 @@ public class CardService {
     private final Bank2Client bank2;
     private final TransactionService transactionService;
     private DiscoveryClient discoveryClient;
+    @Value("${service.gateway.name}")
+    private String gatewayName;
 
     @Autowired
     public CardService(CardRepository cardRepository, Client client, Bank1Client bank1, Bank2Client bank2, TransactionService transactionService, DiscoveryClient discoveryClient) {
@@ -55,6 +59,13 @@ public class CardService {
         return client.getById(id);
     }
 
+    public boolean paymentEnabledForRequest(PaymentRequest request) {
+        if (client.isProcessed(request.getId())) {
+            return false;
+        }
+        return true;
+    }
+
     public void enable(MerchantInfoDTO dto, long storeId) throws MerchantCredentialsNotValidException {
         validateCredentials(dto, storeId);
         try {
@@ -79,7 +90,7 @@ public class CardService {
         try {
             PaymentRequest request = getByRequestId(requestId);
             Card card = getByStoreId(request.getStoreId());
-            List<ServiceInstance> gateway = discoveryClient.getInstances("gateway");
+            List<ServiceInstance> gateway = discoveryClient.getInstances(gatewayName);
             String host = gateway.get(0).getHost();
             int port = gateway.get(0).getPort();
             String callbackUrl = "http://" + host + ":" + port + "/card/card/bank-payment-response";
@@ -95,10 +106,13 @@ public class CardService {
 
     public void setPaymentOutcome(PaymentResponseDTO dto){
         try {
-            transactionService.save(dto);
-            client.setPaymentRequestOutcome(dto.getRequestId(), new PaymentOutcomeDTO(
-                    PaymentStatusDTO.valueOf(dto.getTransactionStatus()),
-                    dto.getErrorMessage()));
+            Transaction transaction = transactionService.save(dto);
+            if (transaction == null) {
+                return;
+            }
+            client.setPaymentRequestOutcome(transaction.getRequestId(), new PaymentOutcomeDTO(
+                    PaymentStatusDTO.valueOf(transaction.getTransactionStatus()),
+                    transaction.getErrorMessage()));
         } catch(Exception e) {
             return;
         }

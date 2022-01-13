@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 
-@FeignClient("auth-service")
+@FeignClient("${service.auth.name}")
 public interface AuthClient {
 
     @GetMapping("token/id")

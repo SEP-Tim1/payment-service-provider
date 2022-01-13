@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import psp.payment.bitcoin.client.OpenNodeClient;
 import psp.payment.bitcoin.client.PaymentRequestClient;
 import psp.payment.bitcoin.dto.*;
+import psp.payment.bitcoin.exceptions.AlreadyProcessedException;
 import psp.payment.bitcoin.exceptions.NotFoundException;
 import psp.payment.bitcoin.service.PaymentService;
 import psp.payment.bitcoin.service.SubscriptionService;
+import psp.payment.bitcoin.service.TransactionService;
 
 @Service
 public class OpenNodePaymentService implements PaymentService {
@@ -19,13 +21,25 @@ public class OpenNodePaymentService implements PaymentService {
     private PaymentRequestClient paymentRequestClient;
     @Autowired
     private SubscriptionService subscriptionService;
-    @Value("${opennode.checkout}")
+    @Autowired
+    private TransactionService transactionService;
+    @Value("${service.opennode.checkout}")
     private String openNodeCheckoutUrl;
-    @Value("${callback.url}")
+    @Value("${service.ngrok.url}")
     private String callbackUrl;
 
     @Override
     public String createCharge(PaymentRequestDTO request) throws NotFoundException {
+        try {
+            if (paymentRequestClient.isProcessed(request.getId())) {
+                throw new AlreadyProcessedException("Payment request has already been processed");
+            }
+            if (transactionService.exists(request.getId())) {
+                throw new AlreadyProcessedException("Payment request is already being processed");
+            }
+        } catch (Exception e) {
+            throw new NotFoundException("Request not found");
+        }
         OpenNodeRequestDTO onRequest = new OpenNodeRequestDTO(
                 request.getAmount(),
                 request.getCurrency().toString(),
@@ -40,20 +54,30 @@ public class OpenNodePaymentService implements PaymentService {
 
     @Override
     public void processChargeStatus(ChargeStatusDTO chargeStatus, long requestId) {
+        transactionService.save(requestId, Long.parseLong(chargeStatus.getOrder_id()), chargeStatus.getStatus());
         PaymentStatusDTO status = convertFromOpenNodeStatus(chargeStatus.getStatus());
-        System.out.println(chargeStatus);
         if (status != null) {
             PaymentOutcomeDTO outcome = new PaymentOutcomeDTO(status, null);
-            //TODO: kreiraj transakciju ako je status = success
             notifyPaymentRequestService(requestId, outcome);
         }
+    }
+
+    @Override
+    public boolean isEnabledForRequest(long requestId, long storeId) {
+        try {
+            if (paymentRequestClient.isProcessed(requestId)) {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return subscriptionService.exists(storeId) && !transactionService.exists(requestId);
     }
 
     private PaymentStatusDTO convertFromOpenNodeStatus(String openNodeStatus) {
         PaymentStatusDTO status = null;
         switch (openNodeStatus) {
-            case "paid":
-            case "processing": {
+            case "paid": {
                 status = PaymentStatusDTO.SUCCESS;
                 break;
             }

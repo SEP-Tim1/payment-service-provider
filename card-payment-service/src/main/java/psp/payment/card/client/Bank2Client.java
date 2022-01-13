@@ -7,7 +7,7 @@ import psp.payment.card.dtos.InvoiceDTO;
 import psp.payment.card.dtos.InvoiceResponseDTO;
 import psp.payment.card.dtos.MerchantCredentialsDTO;
 
-@FeignClient(url= "localhost:8062", name = "second-bank")
+@FeignClient(url= "${service.bank2.url}", name = "second-bank")
 public interface Bank2Client {
     @PostMapping("account/validate")
     void validate(@RequestBody MerchantCredentialsDTO dto);

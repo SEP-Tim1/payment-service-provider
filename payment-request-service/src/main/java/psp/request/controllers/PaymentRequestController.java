@@ -37,4 +37,9 @@ public class PaymentRequestController {
     public void setOutcome(@PathVariable long id, @RequestBody PaymentOutcome outcome) throws NotFoundException {
         service.setOutcome(id, outcome);
     }
+
+    @GetMapping("processed/{id}")
+    public boolean isProcessed(@PathVariable long id) throws NotFoundException {
+        return service.isProcessed(id);
+    }
 }

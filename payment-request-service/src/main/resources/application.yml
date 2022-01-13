@@ -1,18 +1,18 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
     healthcheck:
       enabled: true
 
 spring:
   application:
-    name: payment-request-service
+    name: ${PAYMENT_REQUEST_SERVICE_NAME:payment-request-service}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/psp-payment-request
-    username: postgres
-    password: admin
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/psp-payment-request
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:admin}
   jpa:
     database: postgresql
     hibernate:
@@ -30,13 +30,17 @@ spring:
     init:
       mode: always
   zipkin:
-    baseUrl: http://localhost:9411/
+    baseUrl: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
   sleuth:
     sampler:
       probability: 1
 
 server:
-  port: 8082
+  port: ${PAYMENT_REQUEST_SERVICE_PORT:8082}
   error:
     include-message: always
     include-binding-errors: always
+
+service:
+  store:
+    name: ${STORE_SERVICE_NAME:store-service}

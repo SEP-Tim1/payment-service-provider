@@ -14,8 +14,12 @@ public class TransactionService {
     @Autowired
     private TransactionRepository repository;
 
-    public void save(PaymentResponseDTO dto) {
-        Transaction transaction = new Transaction(
+    public Transaction save(PaymentResponseDTO dto) {
+        Transaction transaction = repository.findByMerchantOrderId(dto.getMerchantOrderId());
+        if (transaction != null) {
+            return null;
+        }
+        transaction = new Transaction(
                 dto.getTransactionStatus(),
                 dto.getMerchantOrderId(),
                 dto.getRequestId(),
@@ -26,5 +30,6 @@ public class TransactionService {
         );
         transaction = repository.save(transaction);
         log.info("Transaction id=" + transaction.getId() + " created.");
+        return transaction;
     }
 }

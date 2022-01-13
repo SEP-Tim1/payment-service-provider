@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import psp.payment.bitcoin.dto.OpenNodeRequestDTO;
 import psp.payment.bitcoin.dto.OpenNodeResponseDTO;
 
-@FeignClient(url="${opennode.url}", name="opennode")
+@FeignClient(url="${service.opennode.url}", name="opennode")
 public interface OpenNodeClient {
 
     @PostMapping("charges")

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InvoiceResponse } from 'src/app/model/invoiceResponse';
 import { BitcoinService } from 'src/app/services/bitcoin.service';
 import { CardService } from 'src/app/services/card.service';
@@ -14,6 +14,7 @@ import { PaymentRequestService } from 'src/app/services/payment-request.service'
 export class CustomerPaymentMethodsPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private service: PaymentRequestService,
     private bitcoinService: BitcoinService,
     private cardService: CardService,
@@ -86,15 +87,22 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
       enabled => {
         this.bitcoin = enabled;
         this.checkAll();
+      },
+      _ => {
+        this.checkAll();
       }
     )
   }
 
   checkAll() {
     if (!this.card && !this.qrcode && !this.paypal && !this.bitcoin) {
-      this.service.getFailureUrl(this.requestId).subscribe((redirectUrl) => {
+      this.service.getFailureUrl(this.requestId).subscribe(
+      (redirectUrl) => {
         console.log(redirectUrl);
         window.location.href = redirectUrl;
+      },
+      _ => {
+        this.router.navigate(['']);
       });
     }
   }

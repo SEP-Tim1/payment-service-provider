@@ -8,7 +8,6 @@ import psp.payment.bitcoin.dto.ChargeStatusDTO;
 import psp.payment.bitcoin.dto.PaymentRequestDTO;
 import psp.payment.bitcoin.exceptions.NotFoundException;
 import psp.payment.bitcoin.service.PaymentService;
-import psp.payment.bitcoin.service.SubscriptionService;
 
 @RestController
 @RequestMapping("payment")
@@ -17,14 +16,12 @@ public class PaymentController {
     @Autowired
     private PaymentRequestClient paymentRequestClient;
     @Autowired
-    private SubscriptionService subscriptionService;
-    @Autowired
     private PaymentService paymentService;
 
     @GetMapping("{requestId}")
     public boolean isEnabledForRequest(@PathVariable long requestId) {
         PaymentRequestDTO request = paymentRequestClient.getById(requestId);
-        return subscriptionService.exists(request.getStoreId());
+        return paymentService.isEnabledForRequest(requestId, request.getStoreId());
     }
 
     @PostMapping("{requestId}")

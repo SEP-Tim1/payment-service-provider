@@ -9,7 +9,7 @@ import psp.payment.card.dtos.PaymentOutcomeDTO;
 import psp.payment.card.dtos.PaymentRequest;
 import psp.payment.card.dtos.PaymentResponseDTO;
 
-@FeignClient("payment-request-service")
+@FeignClient("${service.payment-request.name}")
 public interface Client {
 
     @GetMapping("request/{id}")
@@ -17,4 +17,7 @@ public interface Client {
 
     @PostMapping("request/outcome/{id}")
     void setPaymentRequestOutcome(@PathVariable long id, @RequestBody PaymentOutcomeDTO outcome);
+
+    @GetMapping("request/processed/{id}")
+    boolean isProcessed(@PathVariable long id);
 }

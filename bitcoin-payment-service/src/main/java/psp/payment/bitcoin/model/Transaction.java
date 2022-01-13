@@ -18,10 +18,13 @@ public class Transaction {
     @Column
     private long requestId;
     @Column
-    private String openNodeId;
+    private long merchantOrderId;
+    @Column
+    private String status;
 
-    public Transaction(long requestId, String openNodeId) {
+    public Transaction(long requestId, long merchantOrderId, String status) {
         this.requestId = requestId;
-        this.openNodeId = openNodeId;
+        this.merchantOrderId = merchantOrderId;
+        this.status = status;
     }
 }

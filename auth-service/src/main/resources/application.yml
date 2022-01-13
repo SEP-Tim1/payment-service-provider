@@ -1,18 +1,18 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
     healthcheck:
       enabled: true
 
 spring:
   application:
-    name: auth-service
+    name: ${AUTH_SERVICE_NAME:auth-service}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/psp-auth
-    username: postgres
-    password: admin
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/psp-auth
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:admin}
   jpa:
     database: postgresql
     hibernate:
@@ -30,13 +30,16 @@ spring:
     init:
       mode: always
   zipkin:
-    baseUrl: http://localhost:9411/
+    baseUrl: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
   sleuth:
     sampler:
       probability: 1
 
 server:
-  port: 8083
+  port: ${AUTH_SERVICE_PORT:8083}
   error:
     include-message: always
     include-binding-errors: always
+
+jwt:
+  secret: ${JWT_SECRET:5B43E507D0762852D06EEDD2E30A24F10ABC72AC114D60D6BB592A15BC505B8E}

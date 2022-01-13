@@ -74,9 +74,23 @@ public class PaymentRequestService {
             throw new NotFoundException("Request not found");
         }
         PaymentRequest request = repository.findById(requestId).get();
+        if (request.getOutcome() != null) {
+            return;
+        }
         request.setOutcome(outcome);
         repository.save(request);
         log.info("Payment request (id=" + request.getId() + ") outcome set to status=" + request.getOutcome().getStatus());
-        this.webStoreClient.process(URI.create(request.getCallbackUrl()), new PaymentOutcomeDTO(request.getMerchantOrderId(), outcome.getStatus(), outcome.getMessage()));
+        webStoreClient.process(URI.create(request.getCallbackUrl()), new PaymentOutcomeDTO(request.getMerchantOrderId(), outcome.getStatus(), outcome.getMessage()));
+    }
+
+    public boolean isProcessed(long requestId) throws NotFoundException {
+        if(repository.findById(requestId).isEmpty()) {
+            throw new NotFoundException("Request not found");
+        }
+        PaymentRequest request = repository.findById(requestId).get();
+        if (request.getOutcome() != null) {
+            return true;
+        }
+        return false;
     }
 }

@@ -1,5 +1,6 @@
 package psp.payment.card.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import psp.payment.card.dtos.IsEnabledDTO;
@@ -18,6 +19,7 @@ public class CardController {
 
     private final CardService cardService;
 
+    @Autowired
     public CardController(CardService cardService) {
         this.cardService = cardService;
     }
@@ -26,6 +28,9 @@ public class CardController {
     public ResponseEntity<?> isCardEnabled(@PathVariable long requestId){
         try {
             PaymentRequest request = cardService.getByRequestId(requestId);
+            if (!cardService.paymentEnabledForRequest(request)) {
+                return ResponseEntity.badRequest().body("Request has already been processed");
+            }
             return ResponseEntity.ok(cardService.getByStoreId(request));
         } catch (StoreNotFoundException e) {
             return ResponseEntity.badRequest().body("Store not found.");

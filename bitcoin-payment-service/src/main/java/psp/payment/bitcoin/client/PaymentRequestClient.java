@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import psp.payment.bitcoin.dto.PaymentOutcomeDTO;
 import psp.payment.bitcoin.dto.PaymentRequestDTO;
 
-@FeignClient("payment-request-service")
+@FeignClient("${service.payment-request.name}")
 public interface PaymentRequestClient {
 
     @GetMapping("request/{id}")
@@ -16,4 +16,7 @@ public interface PaymentRequestClient {
 
     @PostMapping("request/outcome/{id}")
     void setPaymentRequestOutcome(@PathVariable long id, @RequestBody PaymentOutcomeDTO outcome);
+
+    @GetMapping("request/processed/{id}")
+    boolean isProcessed(@PathVariable long id);
 }
