@@ -10,7 +10,7 @@ spring:
     name: ${BITCOIN_SERVICE_NAME:bitcoin-payment-service}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/psp-bitcoin
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:psp-bitcoin}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:admin}
   jpa:
@@ -52,4 +52,4 @@ service:
     url: https://dev-api.opennode.com/v1/
     checkout: https://dev-checkout.opennode.com/
   ngrok:
-    url: http://0879-93-87-163-61.ngrok.io/
+    url: ${NGROK_URL:http://0879-93-87-163-61.ngrok.io/}

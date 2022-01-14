@@ -1,0 +1,187 @@
+version: "3.8"
+
+services:
+  auth-service:
+    build: ./auth-service/
+    image: ${AUTH_SERVICE_NAME}
+    container_name: ${AUTH_SERVICE_NAME}
+    restart: on-failure
+    env_file: 
+      - ./env/auth-service.env
+      - ./env/common.env
+    depends_on:
+      - postgres_auth
+      - registry
+    networks:
+      - services
+      - auth_db
+
+  bitcoin-service:
+    build: ./bitcoin-payment-service/
+    image: ${BITCOIN_SERVICE_NAME}
+    container_name: ${BITCOIN_SERVICE_NAME}
+    restart: on-failure
+    env_file: 
+      - ./env/bitcoin-service.env
+      - ./env/common.env
+    depends_on:
+      - postgres_bitcoin
+      - registry
+    networks:
+      - services
+      - bitcoin_db
+
+  card-service:
+    build: ./card-payment-service/
+    image: ${CARD_SERVICE_NAME}
+    container_name: ${CARD_SERVICE_NAME}
+    restart: on-failure
+    env_file: 
+      - ./env/card-service.env
+      - ./env/common.env
+    depends_on:
+      - postgres_card
+      - registry
+    networks:
+      - services
+      - card_db
+
+  gateway:
+    build: ./gateway/
+    image: ${GATEWAY_NAME}
+    container_name: ${GATEWAY_NAME}
+    restart: on-failure
+    env_file: 
+      - ./env/common.env
+    depends_on:
+      - registry
+    networks:
+      - services
+
+  request-service:
+    build: ./payment-request-service/
+    image: ${PAYMENT_REQUEST_SERVICE_NAME}
+    container_name: ${PAYMENT_REQUEST_SERVICE_NAME}
+    restart: on-failure
+    env_file: 
+      - ./env/request-service.env
+      - ./env/common.env
+    depends_on:
+      - postgres_request
+      - registry
+    networks:
+      - services
+      - request_db
+
+  registry:
+    build: ./registry/
+    image: ${EUREKA_HOST}
+    container_name: ${EUREKA_HOST}
+    restart: on-failure
+    env_file: 
+      - ./env/common.env
+    networks:
+      - services
+    ports:
+      - ${EUREKA_PORT}:${EUREKA_PORT}
+
+  store-service:
+    build: ./store-service/
+    image: ${STORE_SERVICE_NAME}
+    container_name: ${STORE_SERVICE_NAME}
+    restart: on-failure
+    env_file: 
+      - ./env/store-service.env
+      - ./env/common.env
+    depends_on:
+      - postgres_store
+      - registry
+    networks:
+      - services
+      - store_db
+
+  postgres_auth:
+    image: postgres:14
+    container_name: postgres-auth
+    restart: on-failure
+    env_file: 
+      - ./env/db.env
+    networks:
+      - auth_db
+    volumes:
+      - /var/lib/postgresql/data
+
+  postgres_bitcoin:
+    image: postgres:14
+    container_name: postgres-bitcoin
+    restart: on-failure
+    env_file: 
+      - ./env/db.env
+    networks:
+      - bitcoin_db
+    volumes:
+      - /var/lib/postgresql/data
+
+  postgres_card:
+    image: postgres:14
+    container_name: postgres-card
+    restart: on-failure
+    env_file: 
+      - ./env/db.env
+    networks:
+      - card_db
+    volumes:
+      - /var/lib/postgresql/data
+
+  postgres_request:
+    image: postgres:14
+    container_name: postgres-request
+    restart: on-failure
+    env_file: 
+      - ./env/db.env
+    networks:
+      - request_db
+    volumes:
+      - /var/lib/postgresql/data
+
+  postgres_store:
+    image: postgres:14
+    container_name: postgres-store
+    restart: on-failure
+    env_file: 
+      - ./env/db.env
+    networks:
+      - store_db
+    volumes:
+      - /var/lib/postgresql/data
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: ${ZIPKIN_HOST}
+    restart: on-failure
+    networks:
+      - services
+
+  psp_front:
+    build: ./psp-front/
+    image: psp-front
+    container_name: psp-front
+    restart: on-failure
+    networks:
+      - services
+    ports:
+      - 80:80
+
+networks:
+  services:
+    driver: bridge
+  auth_db:
+    driver: bridge
+  bitcoin_db:
+    driver: bridge
+  card_db:
+    driver: bridge
+  request_db:
+    driver: bridge
+  store_db:
+    driver: bridge

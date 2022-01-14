@@ -10,7 +10,7 @@ spring:
     name: ${CARD_SERVICE_NAME:card-payment-service}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/psp-card-payment
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:psp-card-payment}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:admin}
   jpa:
@@ -36,7 +36,7 @@ spring:
       probability: 1
 
 server:
-  port: ${BITCOIN_SERVICE_PORT:8080}
+  port: ${CARD_SERVICE_PORT:8080}
   error:
     include-message: always
     include-binding-errors: always
