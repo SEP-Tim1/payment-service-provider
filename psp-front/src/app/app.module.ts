@@ -31,6 +31,7 @@ import { CustomerPaymentMethodsPageComponent } from './pages/customer-payment-me
 import { SubscriptionsPageComponent } from './pages/subscriptions-page/subscriptions-page.component';
 import { MerchantInfoPageComponent } from './pages/merchant-info-page/merchant-info-page.component';
 import { BitcoinSubscriptionComponent } from './pages/bitcoin-subscription/bitcoin-subscription.component';
+import { PaypalSubscriptionComponent } from './pages/paypal-subscription/paypal-subscription.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { BitcoinSubscriptionComponent } from './pages/bitcoin-subscription/bitco
     SubscriptionsPageComponent,
     MerchantInfoPageComponent,
     BitcoinSubscriptionComponent,
+    PaypalSubscriptionComponent,
   ],
   imports: [
     BrowserModule,

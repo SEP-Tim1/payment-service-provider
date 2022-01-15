@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BitcoinService } from 'src/app/services/bitcoin.service';
 import { CardService } from 'src/app/services/card.service';
+import { PaypalService } from 'src/app/services/paypal.service';
 
 @Component({
   selector: 'app-subscriptions-page',
@@ -19,6 +20,7 @@ export class SubscriptionsPageComponent implements OnInit {
   constructor(
     private cardService: CardService,
     private bitcoinService: BitcoinService,
+    private paypalService: PaypalService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -31,6 +33,7 @@ export class SubscriptionsPageComponent implements OnInit {
   checkAvailablePaymentMethods() {
     this.cardPaymentEnabled();
     this.bitcoinPaymentEnabled();
+    this.paypalPaymentEnabled();
   }
 
   cardPaymentEnabled() {
@@ -49,6 +52,17 @@ export class SubscriptionsPageComponent implements OnInit {
     this.bitcoinService.subscribed(this.storeId).subscribe(
       subscribed => {
         this.bitcoin = subscribed;
+      }
+    )
+  }
+
+  paypalPaymentEnabled() {
+    this.paypalService.isSub().subscribe(
+      subscribed => {
+        this.paypal = subscribed;
+      },
+      error => {
+        console.log(error.error);
       }
     )
   }
@@ -86,8 +100,20 @@ export class SubscriptionsPageComponent implements OnInit {
     }
   }
 
-  paypalToggle() {
-    this.paypal = !this.paypal;
+  paypalPayment() {
+    if (!this.paypal) {
+      this.router.navigate(['paypal']);
+    } else {
+      this.paypalService.deleteSub().subscribe(
+        _ => {
+          this.paypal = false;
+          this.openSnackBar('PayPal payments are disabled');
+        },
+        error => {
+          this.openSnackBar(error.error);
+        }
+      )
+    }
   }
 
   qrcodeToggle() {

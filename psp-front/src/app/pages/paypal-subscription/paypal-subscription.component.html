@@ -1,0 +1,59 @@
+<div class="div1">
+    <mat-card class="card1">
+      <div class="grid-container">
+        <div class="grid-item">
+          <form
+            (submit)="sendRequest()"
+            #feedform="ngForm"
+            style="width: 100%"
+            novalidate
+          >
+            <h2 style="text-align: center">Insert PayPal info</h2>
+  
+            <div class="center">
+              <mat-form-field style="width: 100%">
+                <mat-label>Client ID</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="clientId"
+                  required
+                  name="id"
+                  style="height: 40%"
+                />
+              </mat-form-field>
+            </div>
+
+            <div class="center">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Client Secret</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="clientSecret"
+                    required
+                    name="secret"
+                    style="height: 40%"
+                  />
+                </mat-form-field>
+            </div>
+  
+            <div
+              style="text-align: center; margin-top: 15px; margin-bottom: 30px"
+            >
+              <button
+                id="sendRequestButton"
+                mat-raised-button
+                [disabled]="
+                  this.clientId === '' || this.clientSecret === ''
+                "
+                color="primary"
+                type="submit"
+                style="padding: 8 3px; width: 50%; height: 50px"
+              >
+                Enable PayPal Payments
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-card>
+  </div>

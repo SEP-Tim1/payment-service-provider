@@ -19,12 +19,12 @@
           id="paypalButton"
           mat-raised-button
           [ngStyle]="{ 'background-color': paypal ? 'green' : '#1565c0' }"
-          (click)="paypalToggle()"
+          (click)="paypalPayment()"
           color="primary"
           type="button"
           style="padding: 12px 32px; opacity: 120%; width: 50%"
         >
-          {{ paypal ? "Disable " : "Enable " }} Paypal
+          {{ paypal ? "Disable " : "Enable " }} PayPal
         </button>
       </div>
       <div style="text-align: center; margin-top: 50px">

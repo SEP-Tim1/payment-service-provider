@@ -4,6 +4,7 @@ import { BitcoinSubscriptionComponent } from './pages/bitcoin-subscription/bitco
 import { CustomerPaymentMethodsPageComponent } from './pages/customer-payment-methods-page/customer-payment-methods-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { MerchantInfoPageComponent } from './pages/merchant-info-page/merchant-info-page.component';
+import { PaypalSubscriptionComponent } from './pages/paypal-subscription/paypal-subscription.component';
 import { RegistrationPageComponent } from './pages/registration-page/registration-page.component';
 import { StorePageComponent } from './pages/store-page/store-page.component';
 import { SubscriptionsPageComponent } from './pages/subscriptions-page/subscriptions-page.component';
@@ -25,6 +26,11 @@ const routes: Routes = [
   {
     path: 'bitcoin',
     component: BitcoinSubscriptionComponent,
+    data: { expextedRoles: ['MERCHANT'] },
+  },
+  {
+    path: 'paypal',
+    component: PaypalSubscriptionComponent,
     data: { expextedRoles: ['MERCHANT'] },
   },
   {

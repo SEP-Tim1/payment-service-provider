@@ -64,6 +64,8 @@ public class SubscriptionController {
             log.warn("Unauthorized user made an attempt to check bitcoin payment subscription");
             throw new UnauthorizedException("You don't have a permission to check bitcoin payment subscription");
         }
+        long userId = authClient.getUserId(token);
+        storeId = storeClient.getIdByUserId(userId);
         return service.exists(storeId);
     }
 }

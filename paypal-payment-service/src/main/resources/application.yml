@@ -48,7 +48,5 @@ service:
     name: ${PAYMENT_REQUEST_SERVICE_NAME:payment-request-service}
   store:
     name: ${STORE_SERVICE_NAME:store-service}
-  paypal:
-    url: https://api-m.sandbox.paypal.com/
   ngrok:
     url: ${NGROK_URL:http://0879-93-87-163-61.ngrok.io/}
