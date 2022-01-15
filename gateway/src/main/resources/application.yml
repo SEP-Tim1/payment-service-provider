@@ -55,6 +55,18 @@ spring:
             - Path=/bitcoin/**
           filters:
             - StripPrefix=1
+        - id: paypal-payment-service
+          uri: lb://${PAYPAL_SERVICE_NAME:paypal-payment-service}
+          predicates:
+            - Path=/paypal/**
+          filters:
+            - StripPrefix=1
+        - id: qrcode-payment-service
+          uri: lb://${QRCODE_SERVICE_NAME:qrcode-payment-service}
+          predicates:
+            - Path=/qrcode/**
+          filters:
+            - StripPrefix=1
 
 server:
   port: ${GATEWAY_PORT:8090}
