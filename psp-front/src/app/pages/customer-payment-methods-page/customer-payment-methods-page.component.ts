@@ -5,6 +5,7 @@ import { InvoiceResponse } from 'src/app/model/invoiceResponse';
 import { BitcoinService } from 'src/app/services/bitcoin.service';
 import { CardService } from 'src/app/services/card.service';
 import { PaymentRequestService } from 'src/app/services/payment-request.service';
+import { PaypalService } from 'src/app/services/paypal.service';
 
 @Component({
   selector: 'app-customer-payment-methods-page',
@@ -18,6 +19,7 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
     private service: PaymentRequestService,
     private bitcoinService: BitcoinService,
     private cardService: CardService,
+    private paypalService: PaypalService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -66,6 +68,17 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
     );
   }
 
+  paypalPayment() {
+    this.paypalService.pay(this.requestId).subscribe(
+      redirectUrl => {
+        window.location.href = redirectUrl;
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
+
   checkAvailablePaymentMethods() {
     this.checkCard();
   }
@@ -86,6 +99,18 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
     this.bitcoinService.isEnabledForRequest(this.requestId).subscribe(
       enabled => {
         this.bitcoin = enabled;
+        this.checkPayPal();
+      },
+      _ => {
+        this.checkPayPal();
+      }
+    )
+  }
+
+  checkPayPal() {
+    this.paypalService.isEnabled(this.requestId).subscribe(
+      enabled => {
+        this.paypal = enabled;
         this.checkAll();
       },
       _ => {

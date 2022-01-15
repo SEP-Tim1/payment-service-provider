@@ -1,6 +1,6 @@
 export class PayPalMSub {
     constructor(
-        clientId: string,
-        clientSecret: string
+        public clientId: string,
+        public clientSecret: string
     ) {}
 }

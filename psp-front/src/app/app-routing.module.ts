@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BitcoinSubscriptionComponent } from './pages/bitcoin-subscription/bitcoin-subscription.component';
 import { CustomerPaymentMethodsPageComponent } from './pages/customer-payment-methods-page/customer-payment-methods-page.component';
+import { ExecutePaymentPageComponent } from './pages/execute-payment-page/execute-payment-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { MerchantInfoPageComponent } from './pages/merchant-info-page/merchant-info-page.component';
 import { PaypalSubscriptionComponent } from './pages/paypal-subscription/paypal-subscription.component';
@@ -39,6 +40,7 @@ const routes: Routes = [
     data: { expextedRoles: ['MERCHANT'] },
   },
   { path: 'payment/:id', component: CustomerPaymentMethodsPageComponent },
+  { path: 'paypal/execute', component: ExecutePaymentPageComponent }
 ];
 
 @NgModule({

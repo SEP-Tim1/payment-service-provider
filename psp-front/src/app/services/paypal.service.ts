@@ -9,7 +9,8 @@ import { PayPalMSub } from '../model/paypal-msub';
 })
 export class PaypalService {
 
-  private subBaseUrl = environment.backend + '/paypal/merchant/sub/'
+  private subBaseUrl = environment.backend + '/paypal/merchant/sub/';
+  private payBaseUrl = environment.backend + '/paypal/payment/';
 
   constructor(private _http: HttpClient) { }
 
@@ -23,5 +24,17 @@ export class PaypalService {
 
   isSub(): Observable<boolean> {
     return this._http.get<boolean>(this.subBaseUrl);
+  }
+
+  isEnabled(requestId: number): Observable<boolean> {
+    return this._http.get<boolean>(this.payBaseUrl + requestId);
+  }
+
+  pay(requestId: number): Observable<string> {
+    return this._http.post(this.payBaseUrl + requestId, null, { responseType: 'text' });
+  }
+
+  execute(paymentId: string, payerId: string): Observable<string> {
+    return this._http.post(this.payBaseUrl + 'execute/' + paymentId + '/' + payerId, null, { responseType: 'text' });
   }
 }

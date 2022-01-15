@@ -52,4 +52,16 @@ public class MerchantPayPallSubscriptionService implements MerchantSubscriptionS
         }
         return true;
     }
+
+    @Override
+    public MerchantSubscriptionDTO get(long storeId) {
+        MerchantSubscription subscription = repository.findByStoreId(storeId);
+        if (subscription == null) {
+            return null;
+        }
+        return new MerchantSubscriptionDTO(
+                subscription.getClientId(),
+                subscription.getClientSecret()
+        );
+    }
 }

@@ -11,4 +11,6 @@ public interface MerchantSubscriptionService {
     void delete(long storeId) throws NotFoundException;
 
     boolean isSubscribed(long storeId);
+
+    MerchantSubscriptionDTO get(long storeId);
 }
