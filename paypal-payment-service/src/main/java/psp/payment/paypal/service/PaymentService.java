@@ -11,5 +11,11 @@ public interface PaymentService {
 
     String executePayment(String paypalPaymentId, String payerId) throws NotFoundException;
 
+    String cancelPayment(PaymentRequestDTO request) throws NotFoundException;
+
     boolean isEnabledForRequest(long requestId, long storeId);
+
+    String executeAgreement(PaymentRequestDTO request, String token);
+
+    String cancelAgreement(PaymentRequestDTO request) throws NotFoundException;
 }

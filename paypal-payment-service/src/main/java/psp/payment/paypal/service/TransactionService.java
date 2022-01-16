@@ -7,4 +7,6 @@ public interface TransactionService {
     PayPalTransaction save(long requestId, String paypalPaymentId, String status);
 
     PayPalTransaction findByPayPalPaymentId(String paypalPaymentId);
+
+    PayPalTransaction findByRequestId(long requestId);
 }

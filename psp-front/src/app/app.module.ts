@@ -33,6 +33,9 @@ import { MerchantInfoPageComponent } from './pages/merchant-info-page/merchant-i
 import { BitcoinSubscriptionComponent } from './pages/bitcoin-subscription/bitcoin-subscription.component';
 import { PaypalSubscriptionComponent } from './pages/paypal-subscription/paypal-subscription.component';
 import { ExecutePaymentPageComponent } from './pages/execute-payment-page/execute-payment-page.component';
+import { ExecuteAgreementPageComponent } from './pages/execute-agreement-page/execute-agreement-page.component';
+import { CancelPaymentPageComponent } from './pages/cancel-payment-page/cancel-payment-page.component';
+import { CancelAgreementPageComponent } from './pages/cancel-agreement-page/cancel-agreement-page.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +52,9 @@ import { ExecutePaymentPageComponent } from './pages/execute-payment-page/execut
     BitcoinSubscriptionComponent,
     PaypalSubscriptionComponent,
     ExecutePaymentPageComponent,
+    ExecuteAgreementPageComponent,
+    CancelPaymentPageComponent,
+    CancelAgreementPageComponent,
   ],
   imports: [
     BrowserModule,

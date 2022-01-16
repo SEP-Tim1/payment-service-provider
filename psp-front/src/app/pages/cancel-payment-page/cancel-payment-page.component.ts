@@ -4,33 +4,34 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PaypalService } from 'src/app/services/paypal.service';
 
 @Component({
-  selector: 'app-execute-payment-page',
-  templateUrl: './execute-payment-page.component.html',
-  styleUrls: ['./execute-payment-page.component.css']
+  selector: 'app-cancel-payment-page',
+  templateUrl: './cancel-payment-page.component.html',
+  styleUrls: ['./cancel-payment-page.component.css']
 })
-export class ExecutePaymentPageComponent implements OnInit {
+export class CancelPaymentPageComponent implements OnInit {
 
   constructor(
     private paypalService: PaypalService,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) { }
 
-  private paymentId: string = '';
-  private payerId: string = '';
+  private requestId: string = '';
 
   ngOnInit(): void {
-    this.route.queryParams
-      .subscribe(params => {
-        this.paymentId = params['paymentId'];
-        this.payerId = params['PayerID'];
-      }
-    );
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.requestId = id;
+    }
+    this.execute();
   }
 
   execute() {
-    this.paypalService.execute(this.paymentId, this.payerId).subscribe(
+    if (this.requestId === '') {
+      this.router.navigate(['']);
+    }
+    this.paypalService.cancel(this.requestId).subscribe(
       redirectUrl => {
         window.location.href = redirectUrl;
       },

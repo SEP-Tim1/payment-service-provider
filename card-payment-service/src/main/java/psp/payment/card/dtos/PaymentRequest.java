@@ -18,6 +18,7 @@ public class PaymentRequest {
     private LocalDateTime merchantTimestamp;
     private float amount;
     private Currency currency;
+    private String billingCycle;
     private String successUrl;
     private String failureUrl;
     private String errorUrl;

@@ -30,4 +30,9 @@ public class PayPalTransactionService implements TransactionService {
     public PayPalTransaction findByPayPalPaymentId(String paypalPaymentId) {
         return repository.findByPaypalPaymentId(paypalPaymentId);
     }
+
+    @Override
+    public PayPalTransaction findByRequestId(long requestId) {
+        return repository.findByRequestId(requestId);
+    }
 }

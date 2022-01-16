@@ -49,4 +49,4 @@ service:
   store:
     name: ${STORE_SERVICE_NAME:store-service}
   front:
-    url: http://${PSP_FRONT_HOST:localhost}:${PSP_FRONT_PORT:4201}/paypal/execute
+    url: http://${PSP_FRONT_HOST:localhost}:${PSP_FRONT_PORT:4201}/

@@ -27,6 +27,8 @@ public class PaymentRequest {
     @Column
     private Currency currency;
     @Column
+    private BillingCycle billingCycle;
+    @Column
     private String successUrl;
     @Column
     private String failureUrl;
@@ -37,12 +39,13 @@ public class PaymentRequest {
     @Embedded
     private PaymentOutcome outcome;
 
-    public PaymentRequest(long storeId, long merchantOrderId, LocalDateTime merchantTimestamp, float amount, Currency currency, String successUrl, String failureUrl, String errorUrl, String callbackUrl) {
+    public PaymentRequest(long storeId, long merchantOrderId, LocalDateTime merchantTimestamp, float amount, Currency currency, BillingCycle billingCycle, String successUrl, String failureUrl, String errorUrl, String callbackUrl) {
         this.storeId = storeId;
         this.merchantOrderId = merchantOrderId;
         this.merchantTimestamp = merchantTimestamp;
         this.amount = amount;
         this.currency = currency;
+        this.billingCycle = billingCycle;
         this.successUrl = successUrl;
         this.failureUrl = failureUrl;
         this.errorUrl = errorUrl;

@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PaypalService } from 'src/app/services/paypal.service';
 
 @Component({
-  selector: 'app-execute-payment-page',
-  templateUrl: './execute-payment-page.component.html',
-  styleUrls: ['./execute-payment-page.component.css']
+  selector: 'app-execute-agreement-page',
+  templateUrl: './execute-agreement-page.component.html',
+  styleUrls: ['./execute-agreement-page.component.css']
 })
-export class ExecutePaymentPageComponent implements OnInit {
+export class ExecuteAgreementPageComponent implements OnInit {
 
   constructor(
     private paypalService: PaypalService,
@@ -17,20 +17,23 @@ export class ExecutePaymentPageComponent implements OnInit {
     private router: Router
   ) { }
 
-  private paymentId: string = '';
-  private payerId: string = '';
+  private requestId: string = '';
+  private token: string = '';
 
   ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.requestId = id;
+    }
     this.route.queryParams
       .subscribe(params => {
-        this.paymentId = params['paymentId'];
-        this.payerId = params['PayerID'];
+        this.token = params['token'];
       }
     );
   }
 
   execute() {
-    this.paypalService.execute(this.paymentId, this.payerId).subscribe(
+    this.paypalService.executeAgreement(this.requestId, this.token).subscribe(
       redirectUrl => {
         window.location.href = redirectUrl;
       },

@@ -31,6 +31,9 @@ public class CardController {
             if (!cardService.paymentEnabledForRequest(request)) {
                 return ResponseEntity.badRequest().body("Request has already been processed");
             }
+            if (!request.getBillingCycle().equals("ONE_TIME")) {
+                return ResponseEntity.badRequest().body("Subscriptions not supported");
+            }
             return ResponseEntity.ok(cardService.getByStoreId(request));
         } catch (StoreNotFoundException e) {
             return ResponseEntity.badRequest().body("Store not found.");

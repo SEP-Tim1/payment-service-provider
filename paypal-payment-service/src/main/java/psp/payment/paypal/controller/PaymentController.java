@@ -34,4 +34,22 @@ public class PaymentController {
         PaymentRequestDTO request = paymentRequestClient.getById(requestId);
         return service.isEnabledForRequest(requestId, request.getStoreId());
     }
+
+    @PostMapping("execute/sub/{requestId}/{token}")
+    public String executeAgreement(@PathVariable long requestId, @PathVariable String token) {
+        PaymentRequestDTO request = paymentRequestClient.getById(requestId);
+        return service.executeAgreement(request, token);
+    }
+
+    @PutMapping("cancel/{requestId}")
+    public String cancelPayment(@PathVariable long requestId) throws NotFoundException {
+        PaymentRequestDTO request = paymentRequestClient.getById(requestId);
+        return service.cancelPayment(request);
+    }
+
+    @PutMapping("cancel/sub/{requestId}")
+    public String cancelAgreement(@PathVariable long requestId) throws NotFoundException {
+        PaymentRequestDTO request = paymentRequestClient.getById(requestId);
+        return service.cancelAgreement(request);
+    }
 }

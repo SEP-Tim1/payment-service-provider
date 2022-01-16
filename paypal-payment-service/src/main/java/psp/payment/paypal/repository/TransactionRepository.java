@@ -8,4 +8,6 @@ import psp.payment.paypal.model.PayPalTransaction;
 public interface TransactionRepository extends JpaRepository<PayPalTransaction, Long> {
 
     PayPalTransaction findByPaypalPaymentId(String paypalPaymentId);
+
+    PayPalTransaction findByRequestId(long requestId);
 }

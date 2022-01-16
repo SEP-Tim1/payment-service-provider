@@ -21,6 +21,9 @@ public class PaymentController {
     @GetMapping("{requestId}")
     public boolean isEnabledForRequest(@PathVariable long requestId) {
         PaymentRequestDTO request = paymentRequestClient.getById(requestId);
+        if (!request.getBillingCycle().equals("ONE_TIME")) {
+            return false;
+        }
         return paymentService.isEnabledForRequest(requestId, request.getStoreId());
     }
 
