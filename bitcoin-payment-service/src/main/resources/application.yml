@@ -1,9 +1,13 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
+      defaultZone: https://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
     healthcheck:
       enabled: true
+  instance:
+    secure-port-enabled: true
+    non-secure-port-enabled: false
+    hostname: ${EUREKA_HOST:localhost}
 
 spring:
   application:
@@ -30,13 +34,22 @@ spring:
     init:
       mode: always
   zipkin:
-    baseUrl: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
+    baseUrl: https://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
   sleuth:
     sampler:
       probability: 1
 
 server:
   port: ${BITCOIN_SERVICE_PORT:8089}
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:bitcoin-payment-service.keystore.p12
+    key-store-password: password
+    key-alias: bitcoin-payment-service
+    trust-store: classpath:truststore.p12
+    trust-store-password: password
+    trust-store-type: PKCS12
   error:
     include-message: always
     include-binding-errors: always
@@ -52,4 +65,4 @@ service:
     url: https://dev-api.opennode.com/v1/
     checkout: https://dev-checkout.opennode.com/
   ngrok:
-    url: ${NGROK_URL:http://0879-93-87-163-61.ngrok.io/}
+    url: ${NGROK_URL:https://0879-93-87-163-61.ngrok.io/}

@@ -93,7 +93,7 @@ public class CardService {
             List<ServiceInstance> gateway = discoveryClient.getInstances(gatewayName);
             String host = gateway.get(0).getHost();
             int port = gateway.get(0).getPort();
-            String callbackUrl = "http://" + host + ":" + port + "/card/card/bank-payment-response";
+            String callbackUrl = "https://" + host + ":" + port + "/card/card/bank-payment-response";
             return sendInvoice(new InvoiceDTO(request, card, callbackUrl), card.getBank());
         } catch (StoreNotFoundException se) {
             throw new StoreNotFoundException();

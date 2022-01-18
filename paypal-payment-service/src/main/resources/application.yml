@@ -1,9 +1,13 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
+      defaultZone: https://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
     healthcheck:
       enabled: true
+  instance:
+    secure-port-enabled: true
+    non-secure-port-enabled: false
+    hostname: ${EUREKA_HOST:localhost}
 
 spring:
   application:
@@ -30,13 +34,22 @@ spring:
     init:
       mode: always
   zipkin:
-    baseUrl: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
+    baseUrl: https://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
   sleuth:
     sampler:
       probability: 1
 
 server:
   port: ${PAYPAL_SERVICE_PORT:8097}
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:paypal-payment-service.keystore.p12
+    key-store-password: password
+    key-alias: paypal-payment-service
+    trust-store: classpath:truststore.p12
+    trust-store-password: password
+    trust-store-type: PKCS12
   error:
     include-message: always
     include-binding-errors: always
@@ -49,4 +62,4 @@ service:
   store:
     name: ${STORE_SERVICE_NAME:store-service}
   front:
-    url: http://${PSP_FRONT_HOST:localhost}:${PSP_FRONT_PORT:4201}/
+    url: https://${PSP_FRONT_HOST:localhost}:${PSP_FRONT_PORT:4201}/

@@ -1,7 +1,25 @@
-eureka:
-  client:
-    registerWithEureka: false
-    fetchRegistry: false
-
 server:
   port: ${EUREKA_PORT:8761}
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:registry.keystore.p12
+    key-store-password: password
+    key-alias: registry
+    trust-store: classpath:truststore.p12
+    trust-store-password: password
+    trust-store-type: PKCS12
+
+eureka:
+  instance:
+    hostname: localhost
+    non-secure-port-enabled: false
+    secure-port-enabled: true
+    secure-port: ${server.port}
+    homePageUrl: https://${eureka.instance.hostname}:${server.port}/
+    statusPageUrl: https://${eureka.instance.hostname}:${server.port}/admin/info
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: https://${eureka.instance.hostname}:${server.port}/eureka/

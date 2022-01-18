@@ -67,7 +67,10 @@
         },
         "serve": {
           "options": {
-            "port": 4201
+            "port": 4201,
+            "ssl": true,
+            "sslCert": "./ssl/psp-front.crt",
+            "sslKey": "./ssl/psp-front.key"
           },
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
