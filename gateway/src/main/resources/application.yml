@@ -14,7 +14,7 @@ spring:
   application:
     name: ${GATEWAY_NAME:gateway}
   zipkin:
-    baseUrl: https://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
+    baseUrl: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
   sleuth:
     sampler:
       probability: 1

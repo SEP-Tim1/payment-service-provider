@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
+import psp.payment.card.util.SensitiveDataConverter;
 
 import javax.persistence.*;
 
@@ -26,10 +27,12 @@ public class Card {
 
     @Column
     @Nullable
+    @Convert(converter = SensitiveDataConverter.class)
     private long mid;
 
     @Column
     @Nullable
+    @Convert(converter = SensitiveDataConverter.class)
     private String mpassword;
 
     @Column

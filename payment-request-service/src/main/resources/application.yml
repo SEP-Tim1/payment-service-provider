@@ -14,7 +14,7 @@ spring:
     name: ${PAYMENT_REQUEST_SERVICE_NAME:payment-request-service}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:psp-payment-request}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DBB_NAME:psp-payment-request}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:admin}
   jpa:
@@ -34,7 +34,7 @@ spring:
     init:
       mode: always
   zipkin:
-    baseUrl: https://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
+    baseUrl: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
   sleuth:
     sampler:
       probability: 1

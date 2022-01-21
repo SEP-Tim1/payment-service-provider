@@ -3,6 +3,7 @@ package psp.payment.bitcoin.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import psp.payment.bitcoin.util.SensitiveDataConverter;
 
 import javax.persistence.*;
 
@@ -18,6 +19,7 @@ public class Subscription {
     @Column
     private long storeId;
     @Column
+    @Convert(converter = SensitiveDataConverter.class)
     private String apiKey;
 
     public Subscription(long storeId, String apiKey) {

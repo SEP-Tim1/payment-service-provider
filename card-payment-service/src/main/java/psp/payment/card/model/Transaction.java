@@ -16,6 +16,7 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+    @Column
     private String transactionStatus;
     @Column
     private long merchantOrderId;

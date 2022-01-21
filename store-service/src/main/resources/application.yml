@@ -14,7 +14,7 @@ spring:
     name: ${STORE_SERVICE_NAME:store-service}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:psp-store}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DBB_NAME:psp-store}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:admin}
   jpa:
@@ -34,7 +34,7 @@ spring:
     init:
       mode: always
   zipkin:
-    baseUrl: https://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
+    baseUrl: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/
   sleuth:
     sampler:
       probability: 1
@@ -60,3 +60,6 @@ service:
 
 token:
   secret: ${TOKEN_SECRET:5B43E507D1232852D06EEDD2E30A24F10ABC72AC114D60D6BB592A15BC505B8E}
+
+encryption:
+  key: ${ENCRYPTION_KEY:BWFIFBWEO47329BN}
