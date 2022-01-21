@@ -20,7 +20,7 @@ public class Store {
     private String name;
     @Column
     private long userId;
-    @Column
+    @Column(length = 512)
     @Convert(converter = SensitiveDataConverter.class)
     private String apiToken;
 
