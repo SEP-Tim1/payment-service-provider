@@ -11,6 +11,7 @@ import psp.auth.exceptions.NotFoundException;
 import psp.auth.exceptions.NotUniqueException;
 import psp.auth.services.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
@@ -22,12 +23,12 @@ public class AuthController {
     private UserService service;
 
     @PostMapping("register")
-    public void registerMerchant(@RequestBody UserDTO dto) throws NotUniqueException, NoSuchAlgorithmException, InvalidKeySpecException {
-        service.registerMerchant(dto);
+    public void registerMerchant(HttpServletRequest request, @RequestBody UserDTO dto) throws NotUniqueException, NoSuchAlgorithmException, InvalidKeySpecException {
+        service.registerMerchant(request, dto);
     }
 
     @PostMapping("login")
-    public String login(@RequestBody UserDTO dto) throws InvalidArgumentException, NotFoundException {
-        return service.logIn(dto);
+    public String login(HttpServletRequest request, @RequestBody UserDTO dto) throws InvalidArgumentException, NotFoundException {
+        return service.logIn(request, dto);
     }
 }

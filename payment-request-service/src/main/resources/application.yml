@@ -57,3 +57,5 @@ server:
 service:
   store:
     name: ${STORE_SERVICE_NAME:store-service}
+  auth:
+    name: ${AUTH_SERVICE_NAME:auth-service}

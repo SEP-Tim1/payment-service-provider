@@ -66,3 +66,6 @@ service:
 
 encryption:
   key: ${ENCRYPTION_KEY:BWFIFBWEO47329BN}
+
+paypal:
+  mode: ${PAYPAL_MODE:sandbox}

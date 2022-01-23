@@ -9,7 +9,9 @@ import psp.payment.bitcoin.exceptions.NotFoundException;
 import psp.payment.bitcoin.exceptions.UnauthenticatedException;
 import psp.payment.bitcoin.exceptions.UnauthorizedException;
 import psp.payment.bitcoin.service.SubscriptionService;
+import psp.payment.bitcoin.util.LoggerUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 @RestController
@@ -23,49 +25,51 @@ public class SubscriptionController {
     private StoreClient storeClient;
     @Autowired
     private SubscriptionService service;
+    @Autowired
+    private LoggerUtil loggerUtil;
 
     @PostMapping("{apiKey}")
-    public void create(@PathVariable String apiKey, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
+    public void create(HttpServletRequest request,  @PathVariable String apiKey, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
         if (token == null) {
-            log.warn("Unauthenticated user made an attempt to create bitcoin payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthenticated user made an attempt to create bitcoin payment subscription"));
             throw new UnauthenticatedException("You are not logged in");
         }
         if(!authClient.hasRoles(token, Arrays.asList("MERCHANT"))) {
-            log.warn("Unauthorized user made an attempt to create bitcoin payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthorized user made an attempt to create bitcoin payment subscription"));
             throw new UnauthorizedException("You don't have a permission to create bitcoin payment subscription");
         }
         long userId = authClient.getUserId(token);
         long storeId = storeClient.getIdByUserId(userId);
-        service.create(storeId, apiKey);
+        service.create(request, storeId, apiKey);
     }
 
     @DeleteMapping
-    public void delete(@RequestHeader("Authorization") String token) throws UnauthorizedException, UnauthenticatedException, NotFoundException {
+    public void delete(HttpServletRequest request, @RequestHeader("Authorization") String token) throws UnauthorizedException, UnauthenticatedException, NotFoundException {
         if (token == null) {
-            log.warn("Unauthenticated user made an attempt to delete bitcoin payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthenticated user made an attempt to delete bitcoin payment subscription"));
             throw new UnauthenticatedException("You are not logged in");
         }
         if(!authClient.hasRoles(token, Arrays.asList("MERCHANT"))) {
-            log.warn("Unauthorized user made an attempt to delete bitcoin payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthorized user made an attempt to delete bitcoin payment subscription"));
             throw new UnauthorizedException("You don't have a permission to delete bitcoin payment subscription");
         }
         long userId = authClient.getUserId(token);
         long storeId = storeClient.getIdByUserId(userId);
-        service.delete(storeId);
+        service.delete(request, storeId);
     }
 
     @GetMapping("{storeId}")
-    public boolean exists(@PathVariable long storeId, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
+    public boolean exists(HttpServletRequest request, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
         if (token == null) {
-            log.warn("Unauthenticated user made an attempt to check bitcoin payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthenticated user made an attempt to check bitcoin payment subscription"));
             throw new UnauthenticatedException("You are not logged in");
         }
         if(!authClient.hasRoles(token, Arrays.asList("MERCHANT"))) {
-            log.warn("Unauthorized user made an attempt to check bitcoin payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthorized user made an attempt to check bitcoin payment subscription"));
             throw new UnauthorizedException("You don't have a permission to check bitcoin payment subscription");
         }
         long userId = authClient.getUserId(token);
-        storeId = storeClient.getIdByUserId(userId);
+        long storeId = storeClient.getIdByUserId(userId);
         return service.exists(storeId);
     }
 }

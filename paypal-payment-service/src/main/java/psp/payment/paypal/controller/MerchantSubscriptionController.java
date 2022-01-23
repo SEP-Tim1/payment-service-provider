@@ -11,7 +11,9 @@ import psp.payment.paypal.exceptions.NotUniqueException;
 import psp.payment.paypal.exceptions.UnauthenticatedException;
 import psp.payment.paypal.exceptions.UnauthorizedException;
 import psp.payment.paypal.service.MerchantSubscriptionService;
+import psp.payment.paypal.util.LoggerUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 @RestController
@@ -25,45 +27,47 @@ public class MerchantSubscriptionController {
     private AuthClient authClient;
     @Autowired
     private StoreClient storeClient;
+    @Autowired
+    private LoggerUtil loggerUtil;
 
     @PostMapping
-    public void create(@RequestBody MerchantSubscriptionDTO dto, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException, NotUniqueException {
+    public void create(HttpServletRequest request,  @RequestBody MerchantSubscriptionDTO dto, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException, NotUniqueException {
         if (token == null) {
-            log.warn("Unauthenticated user made an attempt to create paypal payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthenticated user made an attempt to create paypal payment subscription"));
             throw new UnauthenticatedException("You are not logged in");
         }
         if(!authClient.hasRoles(token, Arrays.asList("MERCHANT"))) {
-            log.warn("Unauthorized user made an attempt to create paypal payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthorized user made an attempt to create paypal payment subscription"));
             throw new UnauthorizedException("You don't have a permission to create paypal payment subscription");
         }
         long userId = authClient.getUserId(token);
         long storeId = storeClient.getIdByUserId(userId);
-        service.create(dto, storeId);
+        service.create(request, dto, storeId);
     }
 
     @DeleteMapping
-    public void delete(@RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException, NotFoundException {
+    public void delete(HttpServletRequest request, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException, NotFoundException {
         if (token == null) {
-            log.warn("Unauthenticated user made an attempt to delete paypal payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthenticated user made an attempt to delete paypal payment subscription"));
             throw new UnauthenticatedException("You are not logged in");
         }
         if(!authClient.hasRoles(token, Arrays.asList("MERCHANT"))) {
-            log.warn("Unauthorized user made an attempt to delete paypal payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthorized user made an attempt to delete paypal payment subscription"));
             throw new UnauthorizedException("You don't have a permission to delete paypal payment subscription");
         }
         long userId = authClient.getUserId(token);
         long storeId = storeClient.getIdByUserId(userId);
-        service.delete(storeId);
+        service.delete(request, storeId);
     }
 
     @GetMapping
-    public boolean isSubscribed(@RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
+    public boolean isSubscribed(HttpServletRequest request, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
         if (token == null) {
-            log.warn("Unauthenticated user made an attempt to check paypal payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthenticated user made an attempt to check paypal payment subscription"));
             throw new UnauthenticatedException("You are not logged in");
         }
         if(!authClient.hasRoles(token, Arrays.asList("MERCHANT"))) {
-            log.warn("Unauthorized user made an attempt to check paypal payment subscription");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthorized user made an attempt to check paypal payment subscription"));
             throw new UnauthorizedException("You don't have a permission to check paypal payment subscription");
         }
         long userId = authClient.getUserId(token);

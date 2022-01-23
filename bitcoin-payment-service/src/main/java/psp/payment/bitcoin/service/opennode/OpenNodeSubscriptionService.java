@@ -7,7 +7,9 @@ import psp.payment.bitcoin.exceptions.NotFoundException;
 import psp.payment.bitcoin.model.Subscription;
 import psp.payment.bitcoin.repository.SubscriptionRepository;
 import psp.payment.bitcoin.service.SubscriptionService;
+import psp.payment.bitcoin.util.LoggerUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Service
@@ -16,27 +18,29 @@ public class OpenNodeSubscriptionService implements SubscriptionService {
 
     @Autowired
     private SubscriptionRepository repository;
+    @Autowired
+    private LoggerUtil loggerUtil;
 
     @Override
-    public void create(long storeId, String apiKey) {
+    public void create(HttpServletRequest request, long storeId, String apiKey) {
         if (repository.findByStoreId(storeId).isPresent()) {
-            log.info("Subscription creation attempt for store (id=" + storeId + "). Subscription already exists.");
+            log.info(loggerUtil.getLogMessage(request, "Subscription creation attempt for store (id=" + storeId + "). Subscription already exists."));
             return;
         }
         Subscription subscription = new Subscription(storeId, apiKey);
         subscription = repository.save(subscription);
-        log.info("Subscription (id=" + subscription.getId() + ") created for a store (id=" + storeId + ")");
+        log.info(loggerUtil.getLogMessage(request, "Subscription (id=" + subscription.getId() + ") created for a store (id=" + storeId + ")"));
     }
 
     @Override
-    public void delete(long storeId) throws NotFoundException {
+    public void delete(HttpServletRequest request, long storeId) throws NotFoundException {
         Optional<Subscription> subOpt = repository.findByStoreId(storeId);
         if (subOpt.isEmpty()) {
-            log.info("Subscription deletion attempt for store (id= )" + storeId + "). Subscription does not exist.");
+            log.info(loggerUtil.getLogMessage(request, "Subscription deletion attempt for store (id= )" + storeId + "). Subscription does not exist."));
             throw new NotFoundException("Subscription not found");
         }
         repository.delete(subOpt.get());
-        log.info("Subscription deleted for a store (id=" + storeId + ")");
+        log.info(loggerUtil.getLogMessage(request, "Subscription deleted for a store (id=" + storeId + ")"));
     }
 
     @Override

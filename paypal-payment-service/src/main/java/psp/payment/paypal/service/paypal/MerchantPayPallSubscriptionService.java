@@ -9,6 +9,9 @@ import psp.payment.paypal.exceptions.NotUniqueException;
 import psp.payment.paypal.model.MerchantSubscription;
 import psp.payment.paypal.repository.MerchantSubscriptionRepository;
 import psp.payment.paypal.service.MerchantSubscriptionService;
+import psp.payment.paypal.util.LoggerUtil;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 @Slf4j
@@ -16,12 +19,14 @@ public class MerchantPayPallSubscriptionService implements MerchantSubscriptionS
 
     @Autowired
     private MerchantSubscriptionRepository repository;
+    @Autowired
+    private LoggerUtil loggerUtil;
 
     @Override
-    public void create(MerchantSubscriptionDTO dto, long storeId) throws NotUniqueException {
+    public void create(HttpServletRequest request, MerchantSubscriptionDTO dto, long storeId) throws NotUniqueException {
         MerchantSubscription subscription = repository.findByStoreId(storeId);
         if (subscription != null) {
-            log.warn("Subscription creation attempt for store (id=" + storeId + "). It already exists");
+            log.warn(loggerUtil.getLogMessage(request, "Subscription creation attempt for store (id=" + storeId + "). It already exists"));
             throw new NotUniqueException("Subscription already exists");
         }
         subscription = new MerchantSubscription(
@@ -30,18 +35,18 @@ public class MerchantPayPallSubscriptionService implements MerchantSubscriptionS
                 dto.getClientSecret()
         );
         subscription = repository.save(subscription);
-        log.info("Merchant subscription (id=" + subscription.getId() + ") created for store (id=" + storeId + ")");
+        log.info(loggerUtil.getLogMessage(request, "Merchant subscription (id=" + subscription.getId() + ") created for store (id=" + storeId + ")"));
     }
 
     @Override
-    public void delete(long storeId) throws NotFoundException {
+    public void delete(HttpServletRequest request, long storeId) throws NotFoundException {
         MerchantSubscription subscription = repository.findByStoreId(storeId);
         if (subscription == null) {
-            log.warn("Subscription deletion attempt for store (id=" + storeId + "). It does not exist");
+            log.warn(loggerUtil.getLogMessage(request, "Subscription deletion attempt for store (id=" + storeId + "). It does not exist"));
             throw new NotFoundException("Subscription not found");
         }
         repository.delete(subscription);
-        log.info("Merchant subscription for store (id=" + storeId + ") deketed");
+        log.info(loggerUtil.getLogMessage(request, "Merchant subscription for store (id=" + storeId + ") deketed"));
     }
 
     @Override

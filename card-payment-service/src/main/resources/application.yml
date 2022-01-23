@@ -63,6 +63,10 @@ service:
     name: ${PAYMENT_REQUEST_SERVICE_NAME:payment-request-service}
   gateway:
     name: ${GATEWAY_NAME:gateway}
+  auth:
+    name: ${AUTH_SERVICE_NAME:auth-service}
+  store:
+    name: ${STORE_SERVICE_NAME:store-service}
 
 encryption:
   key: ${ENCRYPTION_KEY:BWFIFBWEO47329BN}

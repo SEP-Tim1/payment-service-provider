@@ -17,7 +17,9 @@ import psp.payment.card.exceptions.StoreNotFoundException;
 import psp.payment.card.model.Card;
 import psp.payment.card.model.Transaction;
 import psp.payment.card.repositories.CardRepository;
+import psp.payment.card.util.LoggerUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j
@@ -32,15 +34,17 @@ public class CardService {
     private DiscoveryClient discoveryClient;
     @Value("${service.gateway.name}")
     private String gatewayName;
+    private LoggerUtil loggerUtil;
 
     @Autowired
-    public CardService(CardRepository cardRepository, Client client, Bank1Client bank1, Bank2Client bank2, TransactionService transactionService, DiscoveryClient discoveryClient) {
+    public CardService(CardRepository cardRepository, Client client, Bank1Client bank1, Bank2Client bank2, TransactionService transactionService, DiscoveryClient discoveryClient, LoggerUtil loggerUtil) {
         this.cardRepository = cardRepository;
         this.client = client;
         this.bank1 = bank1;
         this.bank2 = bank2;
         this.transactionService = transactionService;
         this.discoveryClient = discoveryClient;
+        this.loggerUtil = loggerUtil;
     }
 
     public Card getByStoreId(PaymentRequest request) throws StoreNotFoundException {
@@ -66,8 +70,8 @@ public class CardService {
         return true;
     }
 
-    public void enable(MerchantInfoDTO dto, long storeId) throws MerchantCredentialsNotValidException {
-        validateCredentials(dto, storeId);
+    public void enable(HttpServletRequest r, MerchantInfoDTO dto, long storeId) throws MerchantCredentialsNotValidException {
+        validateCredentials(r, dto, storeId);
         try {
             Card card = getByStoreId(storeId);
             card.update(true, dto.getMid(), dto.getMpassword(), dto.getBank());
@@ -76,17 +80,17 @@ public class CardService {
             Card card = new Card(storeId, true, dto.getMid(), dto.getMpassword(), dto.getBank());
             cardRepository.save(card);
         }
-        log.info("Store (id=" + storeId + ") enabled card payment services");
+        log.info(loggerUtil.getLogMessage(r, "Store (id=" + storeId + ") enabled card payment services"));
     }
 
-    public void disable(long storeId) throws StoreNotFoundException {
+    public void disable(HttpServletRequest r, long storeId) throws StoreNotFoundException {
         Card card = getByStoreId(storeId);
         card.setCardPaymentEnabled(false);
         cardRepository.save(card);
-        log.info("Store (id=" + storeId + ") disabled card payment services");
+        log.info(loggerUtil.getLogMessage(r, "Store (id=" + storeId + ") disabled card payment services"));
     }
 
-    public InvoiceResponseDTO getInvoiceResponse(long requestId) throws StoreNotFoundException, InvoiceNotValidException, RequestNotFoundException {
+    public InvoiceResponseDTO getInvoiceResponse(HttpServletRequest r, long requestId) throws StoreNotFoundException, InvoiceNotValidException, RequestNotFoundException {
         try {
             PaymentRequest request = getByRequestId(requestId);
             Card card = getByStoreId(request.getStoreId());
@@ -94,7 +98,9 @@ public class CardService {
             String host = gateway.get(0).getHost();
             int port = gateway.get(0).getPort();
             String callbackUrl = "https://" + host + ":" + port + "/card/card/bank-payment-response";
-            return sendInvoice(new InvoiceDTO(request, card, callbackUrl), card.getBank());
+            InvoiceResponseDTO response = sendInvoice(r, new InvoiceDTO(request, card, callbackUrl), card.getBank());
+            log.info(loggerUtil.getLogMessage(r, "Invoice for request (id=" + requestId + ") created. Payment (id=" + response.getPaymentId() + ", url=" + response.getPaymentUrl() + ") received"));
+            return response;
         } catch (StoreNotFoundException se) {
             throw new StoreNotFoundException();
         } catch (InvoiceNotValidException ie) {
@@ -118,30 +124,30 @@ public class CardService {
         }
     }
 
-    private InvoiceResponseDTO sendInvoice(InvoiceDTO invoice, int bank) throws InvoiceNotValidException {
+    private InvoiceResponseDTO sendInvoice(HttpServletRequest r, InvoiceDTO invoice, int bank) throws InvoiceNotValidException {
         try{
             InvoiceResponseDTO response;
             if (bank == 1) {
                 response = bank1.generate(invoice);
-                log.info("Invoice (merchantOrderId=" + invoice.getMerchantOrderId()
+                log.info(loggerUtil.getLogMessage(r, "Invoice (merchantOrderId=" + invoice.getMerchantOrderId()
                         + ", requestId=" + invoice.getRequestId()
-                        + ") sent to bank1");
+                        + ") sent to bank1"));
             } else {
                 response = bank2.generate(invoice);
-                log.info("Invoice (merchantOrderId=" + invoice.getMerchantOrderId()
+                log.info(loggerUtil.getLogMessage(r, "Invoice (merchantOrderId=" + invoice.getMerchantOrderId()
                         + ", requestId=" + invoice.getRequestId()
-                        + ") sent to bank2");
+                        + ") sent to bank2"));
             }
-            log.info("Invoice (merchantOrderId=" + invoice.getMerchantOrderId()
+            log.info(loggerUtil.getLogMessage(r, "Invoice (merchantOrderId=" + invoice.getMerchantOrderId()
                     + ", requestId=" + invoice.getRequestId()
-                    + ") received paymentId=" + response.getPaymentId());
+                    + ") received paymentId=" + response.getPaymentId()));
             return response;
         } catch (Exception e){
             throw new InvoiceNotValidException();
         }
     }
 
-    private void validateCredentials(MerchantInfoDTO dto, long storeId) throws MerchantCredentialsNotValidException {
+    private void validateCredentials(HttpServletRequest r, MerchantInfoDTO dto, long storeId) throws MerchantCredentialsNotValidException {
         try {
             MerchantCredentialsDTO credentials = new MerchantCredentialsDTO(dto.getMid(), dto.getMpassword());
             if (dto.getBank() == 1) {
@@ -150,7 +156,7 @@ public class CardService {
                 bank2.validate(credentials);
             }
         } catch (Exception e) {
-            log.info("Store (id=" + storeId + ") has invalid merchant id and/or merchant password");
+            log.info(loggerUtil.getLogMessage(r, "Store (id=" + storeId + ") has invalid merchant id and/or merchant password"));
             throw new MerchantCredentialsNotValidException();
         }
     }

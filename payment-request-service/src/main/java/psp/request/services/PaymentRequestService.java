@@ -12,7 +12,9 @@ import psp.request.exceptions.NotFoundException;
 import psp.request.model.PaymentOutcome;
 import psp.request.model.PaymentRequest;
 import psp.request.repositories.PaymentRequestRepository;
+import psp.request.util.LoggerUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Optional;
 
@@ -23,20 +25,22 @@ public class PaymentRequestService {
     private final PaymentRequestRepository repository;
     private final StoreClient storeClient;
     private final WebStoreClient webStoreClient;
+    private final LoggerUtil loggerUtil;
 
     @Autowired
-    public PaymentRequestService(PaymentRequestRepository repository, StoreClient storeClient, WebStoreClient webStoreClient) {
+    public PaymentRequestService(PaymentRequestRepository repository, StoreClient storeClient, WebStoreClient webStoreClient, LoggerUtil loggerUtil) {
         this.repository = repository;
         this.storeClient = storeClient;
         this.webStoreClient = webStoreClient;
+        this.loggerUtil = loggerUtil;
     }
 
-    public PaymentResponseIdDTO create(PaymentRequestDTO dto) throws NotFoundException {
+    public PaymentResponseIdDTO create(HttpServletRequest r, PaymentRequestDTO dto) throws NotFoundException {
         long storeId;
         try {
             storeId = storeClient.getIdByApiToken(dto.getApiToken());
         } catch (Exception e) {
-            log.warn("Attempt to create a payment request with invalid API Token");
+            log.warn(loggerUtil.getLogMessage(r, "Attempt to create a payment request with invalid API Token"));
             throw new NotFoundException("Store could not be found");
         }
         PaymentRequest request = new PaymentRequest(
@@ -52,12 +56,14 @@ public class PaymentRequestService {
                 dto.getCallbackUrl()
         );
         request = repository.save(request);
-        log.info("Payment request (id=" + request.getId() + ") created");
+        log.info(loggerUtil.getLogMessage(r, "Payment request (id=" + request.getId() + ") created for store (id=" + storeId + ")"));
         return new PaymentResponseIdDTO(request.getId());
     }
 
     public PaymentRequest getById(long id) throws NotFoundException {
-        if(repository.findById(id).isPresent()) return repository.findById(id).get();
+        if(repository.findById(id).isPresent()) {
+            return repository.findById(id).get();
+        }
         throw new NotFoundException("Payment Request could not be found");
     }
 
@@ -70,7 +76,7 @@ public class PaymentRequestService {
         return request.get().getFailureUrl();
     }
 
-    public void setOutcome(long requestId, PaymentOutcome outcome) throws NotFoundException {
+    public void setOutcome(HttpServletRequest r, long requestId, PaymentOutcome outcome) throws NotFoundException {
         if(repository.findById(requestId).isEmpty()) {
             throw new NotFoundException("Request not found");
         }
@@ -80,7 +86,7 @@ public class PaymentRequestService {
         }
         request.setOutcome(outcome);
         repository.save(request);
-        log.info("Payment request (id=" + request.getId() + ") outcome set to status=" + request.getOutcome().getStatus());
+        log.info(loggerUtil.getLogMessage(r, "Payment request (id=" + request.getId() + ") outcome set to status=" + request.getOutcome().getStatus()));
         webStoreClient.process(URI.create(request.getCallbackUrl()), new PaymentOutcomeDTO(request.getMerchantOrderId(), outcome.getStatus(), outcome.getMessage()));
     }
 

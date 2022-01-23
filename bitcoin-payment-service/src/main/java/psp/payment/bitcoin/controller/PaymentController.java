@@ -9,6 +9,8 @@ import psp.payment.bitcoin.dto.PaymentRequestDTO;
 import psp.payment.bitcoin.exceptions.NotFoundException;
 import psp.payment.bitcoin.service.PaymentService;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("payment")
 public class PaymentController {
@@ -28,14 +30,14 @@ public class PaymentController {
     }
 
     @PostMapping("{requestId}")
-    public String createCharge(@PathVariable long requestId) throws NotFoundException {
+    public String createCharge(HttpServletRequest r, @PathVariable long requestId) throws NotFoundException {
         PaymentRequestDTO request = paymentRequestClient.getById(requestId);
-        return paymentService.createCharge(request);
+        return paymentService.createCharge(r, request);
     }
 
     @PostMapping(value = "status/{requestId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public void processChargeStatus(@PathVariable long requestId, ChargeStatusDTO status) {
+    public void processChargeStatus(HttpServletRequest request, @PathVariable long requestId, ChargeStatusDTO status) {
         //TODO: verify
-        paymentService.processChargeStatus(status, requestId);
+        paymentService.processChargeStatus(request, status, requestId);
     }
 }

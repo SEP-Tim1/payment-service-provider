@@ -29,7 +29,7 @@ public class TransactionService {
                 dto.getErrorMessage()
         );
         transaction = repository.save(transaction);
-        log.info("Transaction id=" + transaction.getId() + " created.");
+        log.info("Transaction (id=" + transaction.getId() + ", requestId=" + transaction.getRequestId() + ", status=" + transaction.getTransactionStatus() + ") created.");
         return transaction;
     }
 }

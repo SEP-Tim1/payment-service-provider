@@ -8,6 +8,8 @@ import psp.request.model.PaymentOutcome;
 import psp.request.model.PaymentRequest;
 import psp.request.services.PaymentRequestService;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("request")
 public class PaymentRequestController {
@@ -19,8 +21,8 @@ public class PaymentRequestController {
     }
 
     @PostMapping
-    public PaymentResponseIdDTO create(@RequestBody PaymentRequestDTO dto) throws NotFoundException {
-        return service.create(dto);
+    public PaymentResponseIdDTO create(HttpServletRequest request, @RequestBody PaymentRequestDTO dto) throws NotFoundException {
+        return service.create(request, dto);
     }
 
     @GetMapping("failure/{requestId}")
@@ -34,8 +36,8 @@ public class PaymentRequestController {
     }
 
     @PostMapping("outcome/{id}")
-    public void setOutcome(@PathVariable long id, @RequestBody PaymentOutcome outcome) throws NotFoundException {
-        service.setOutcome(id, outcome);
+    public void setOutcome(HttpServletRequest request, @PathVariable long id, @RequestBody PaymentOutcome outcome) throws NotFoundException {
+        service.setOutcome(request, id, outcome);
     }
 
     @GetMapping("processed/{id}")

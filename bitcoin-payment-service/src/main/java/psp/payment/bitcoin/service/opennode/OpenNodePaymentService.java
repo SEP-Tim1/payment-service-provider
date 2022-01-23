@@ -1,5 +1,6 @@
 package psp.payment.bitcoin.service.opennode;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,11 @@ import psp.payment.bitcoin.exceptions.NotFoundException;
 import psp.payment.bitcoin.service.PaymentService;
 import psp.payment.bitcoin.service.SubscriptionService;
 import psp.payment.bitcoin.service.TransactionService;
+import psp.payment.bitcoin.util.LoggerUtil;
 
+import javax.servlet.http.HttpServletRequest;
+
+@Slf4j
 @Service
 public class OpenNodePaymentService implements PaymentService {
 
@@ -27,18 +32,23 @@ public class OpenNodePaymentService implements PaymentService {
     private String openNodeCheckoutUrl;
     @Value("${service.ngrok.url}")
     private String callbackUrl;
+    @Autowired
+    private LoggerUtil loggerUtil;
 
     @Override
-    public String createCharge(PaymentRequestDTO request) throws NotFoundException {
+    public String createCharge(HttpServletRequest r, PaymentRequestDTO request) throws NotFoundException {
         try {
             if (paymentRequestClient.isProcessed(request.getId())) {
-                throw new AlreadyProcessedException("Payment request has already been processed");
+                log.info(loggerUtil.getLogMessage(r, "Create charge request. Payment request (id= " + request.getId() + ") has already been processed"));
+                throw new AlreadyProcessedException("Payment request cannot be processed");
             }
             if (transactionService.exists(request.getId())) {
-                throw new AlreadyProcessedException("Payment request is already being processed");
+                log.info(loggerUtil.getLogMessage(r, "Create charge request. Payment request (id= " + request.getId() + ") is already being processed"));
+                throw new AlreadyProcessedException("Payment request cannot be processed");
             }
         } catch (Exception e) {
-            throw new NotFoundException("Request not found");
+            log.warn(loggerUtil.getLogMessage(r, "Create charge request. Payment request (id=" + request.getId() + ") cannot be found."));
+            throw new NotFoundException("Payment request cannot be processed");
         }
         OpenNodeRequestDTO onRequest = new OpenNodeRequestDTO(
                 request.getAmount(),
@@ -49,15 +59,17 @@ public class OpenNodePaymentService implements PaymentService {
         );
         String apiKey = subscriptionService.getApiKey(request.getStoreId());
         OpenNodeResponseDTO response = openNodeClient.createCharge(onRequest, apiKey);
+        log.info(loggerUtil.getLogMessage(r, "Create charge request. Payment request (id=" + ") has OpenNode payment created (id=" + response.getData().getId() + ")"));
         return openNodeCheckoutUrl + response.getData().getId();
     }
 
     @Override
-    public void processChargeStatus(ChargeStatusDTO chargeStatus, long requestId) {
-        transactionService.save(requestId, Long.parseLong(chargeStatus.getOrder_id()), chargeStatus.getStatus());
+    public void processChargeStatus(HttpServletRequest request, ChargeStatusDTO chargeStatus, long requestId) {
+        transactionService.save(request, requestId, Long.parseLong(chargeStatus.getOrder_id()), chargeStatus.getStatus());
         PaymentStatusDTO status = convertFromOpenNodeStatus(chargeStatus.getStatus());
         if (status != null) {
             PaymentOutcomeDTO outcome = new PaymentOutcomeDTO(status, null);
+            log.info(loggerUtil.getLogMessage(request, "Payment request (id=" + requestId + ") outcome " + outcome.getStatus() + ". Notifying payment request service."));
             notifyPaymentRequestService(requestId, outcome);
         }
     }

@@ -4,11 +4,13 @@ import psp.payment.bitcoin.dto.ChargeStatusDTO;
 import psp.payment.bitcoin.dto.PaymentRequestDTO;
 import psp.payment.bitcoin.exceptions.NotFoundException;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface PaymentService {
 
-    String createCharge(PaymentRequestDTO request) throws NotFoundException;
+    String createCharge(HttpServletRequest r, PaymentRequestDTO request) throws NotFoundException;
 
-    void processChargeStatus(ChargeStatusDTO chargeStatus, long requestId);
+    void processChargeStatus(HttpServletRequest request, ChargeStatusDTO chargeStatus, long requestId);
 
     boolean isEnabledForRequest(long requestId, long storeId);
 }

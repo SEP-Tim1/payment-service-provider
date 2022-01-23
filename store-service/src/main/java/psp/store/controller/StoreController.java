@@ -9,7 +9,9 @@ import psp.store.exceptions.UnauthenticatedException;
 import psp.store.exceptions.UnauthorizedException;
 import psp.store.model.Store;
 import psp.store.services.StoreService;
+import psp.store.util.LoggerUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 @Slf4j
@@ -21,29 +23,31 @@ public class StoreController {
     private StoreService service;
     @Autowired
     private AuthClient authClient;
+    @Autowired
+    private LoggerUtil loggerUtil;
 
     @PostMapping("{name}")
-    public void create(@PathVariable String name, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
+    public void create(HttpServletRequest request,  @PathVariable String name, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
         if (token == null) {
-            log.warn("Unauthenticated user made an attempt to create a store");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthenticated user made an attempt to create a store"));
             throw new UnauthenticatedException("You are not logged in");
         }
         if(!authClient.hasRoles(token, Arrays.asList("MERCHANT"))) {
-            log.warn("Unauthorized user made an attempt to create a store");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthorized user made an attempt to create a store"));
             throw new UnauthorizedException("You don't have a permission to create a store");
         }
         long userId = authClient.getUserId(token);
-        this.service.create(name, userId);
+        this.service.create(request, name, userId);
     }
 
     @GetMapping
-    public Store get(@RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
+    public Store get(HttpServletRequest request, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
         if (token == null) {
-            log.warn("Unauthenticated user made an attempt to fetch store's info");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthenticated user made an attempt to fetch store's info"));
             throw new UnauthenticatedException("You are not logged in");
         }
         if(!authClient.hasRoles(token, Arrays.asList("MERCHANT"))) {
-            log.warn("Unauthorized user made an attempt to fetch store's info");
+            log.warn(loggerUtil.getLogMessage(request, "Unauthorized user made an attempt to fetch store's info"));
             throw new UnauthorizedException("You don't have a permission to view store info");
         }
         long userId = authClient.getUserId(token);
@@ -51,17 +55,17 @@ public class StoreController {
     }
 
     @GetMapping("id/{apiToken}")
-    public long getIdByApiToken(@PathVariable String apiToken) throws NotFoundException {
-        return service.getIdByApiToken(apiToken);
+    public long getIdByApiToken(HttpServletRequest request, @PathVariable String apiToken) throws NotFoundException {
+        return service.getIdByApiToken(request, apiToken);
     }
 
     @GetMapping("token/{id}")
-    public String getApiTokenById(@PathVariable long id) throws NotFoundException {
-        return service.getApiTokenById(id);
+    public String getApiTokenById(HttpServletRequest request, @PathVariable long id) throws NotFoundException {
+        return service.getApiTokenById(request, id);
     }
 
     @GetMapping("{userId}")
-    public long getIdByUserId(@PathVariable long userId) throws NotFoundException {
-        return service.getIdByUserId(userId);
+    public long getIdByUserId(HttpServletRequest request, @PathVariable long userId) throws NotFoundException {
+        return service.getIdByUserId(request, userId);
     }
 }
