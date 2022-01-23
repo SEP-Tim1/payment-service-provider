@@ -15,6 +15,7 @@ import psp.payment.card.service.CardService;
 import psp.payment.card.util.LoggerUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Arrays;
 
 @RestController
@@ -73,7 +74,7 @@ public class CardController {
     }
 
     @PostMapping("/enable/{storeId}")
-    public ResponseEntity<?> enable(HttpServletRequest request, @RequestBody MerchantInfoDTO dto, @RequestHeader("Authorization") String token) throws UnauthorizedException, UnauthenticatedException {
+    public ResponseEntity<?> enable(HttpServletRequest request, @RequestBody @Valid MerchantInfoDTO dto, @RequestHeader("Authorization") String token) throws UnauthorizedException, UnauthenticatedException {
         if (token == null) {
             log.warn(loggerUtil.getLogMessage(request, "Unauthenticated user made an attempt to create card payment subscription"));
             throw new UnauthenticatedException("You are not logged in");

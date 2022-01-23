@@ -14,6 +14,7 @@ import psp.payment.paypal.service.MerchantSubscriptionService;
 import psp.payment.paypal.util.LoggerUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Arrays;
 
 @RestController
@@ -31,7 +32,7 @@ public class MerchantSubscriptionController {
     private LoggerUtil loggerUtil;
 
     @PostMapping
-    public void create(HttpServletRequest request,  @RequestBody MerchantSubscriptionDTO dto, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException, NotUniqueException {
+    public void create(HttpServletRequest request, @RequestBody @Valid MerchantSubscriptionDTO dto, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException, NotUniqueException {
         if (token == null) {
             log.warn(loggerUtil.getLogMessage(request, "Unauthenticated user made an attempt to create paypal payment subscription"));
             throw new UnauthenticatedException("You are not logged in");

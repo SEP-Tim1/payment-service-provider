@@ -17,7 +17,9 @@
                   matInput
                   [(ngModel)]="apiKey"
                   required
+                  #key="ngModel"
                   name="key"
+                  pattern="^[A-Za-z0-9 -_]{1,}$"
                   style="height: 40%"
                 />
               </mat-form-field>
@@ -29,9 +31,7 @@
               <button
                 id="sendRequestButton"
                 mat-raised-button
-                [disabled]="
-                  this.apiKey === ''
-                "
+                [disabled]="key.invalid"
                 color="primary"
                 type="submit"
                 style="padding: 8 3px; width: 50%; height: 50px"

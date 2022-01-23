@@ -16,8 +16,7 @@
               <input
                 matInput
                 [(ngModel)]="mid"
-                required
-                pattern="[0-9]*"
+                pattern="[0-9]+"
                 placeholder="Insert Merchant ID Number"
                 maxlength="50"
                 name="mid"
@@ -37,6 +36,8 @@
                 required
                 maxlength="50"
                 name="mpassword"
+                #pass="ngModel"
+                pattern="^[A-Za-z0-9]{20}"
                 style="height: 40%"
               />
             </mat-form-field>
@@ -58,7 +59,7 @@
               mat-raised-button
               [disabled]="
                 !this.idControl.valid ||
-                this.dto.mpassword === '' ||
+                pass.invalid ||
                 this.dto.bank === 0
               "
               color="primary"

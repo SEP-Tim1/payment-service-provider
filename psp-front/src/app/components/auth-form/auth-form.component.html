@@ -14,8 +14,9 @@
         #name="ngModel"
         name="username"
         matInput
-        required
+        pattern="^[A-Za-z0-9]{8,50}$"
         cdkTextareaAutosize
+        placeholder="Username must contain between 8 and 50 characters and can contain only letters and digits"
         [(ngModel)]="user.username"
         style="height: 40%"
       ></textarea>
@@ -30,8 +31,9 @@
         name="password"
         type="password"
         matInput
-        required
+        pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+=])[A-Za-z\d@#$%^&+=].{8,50}"
         cdkTextareaAutosize
+        placeholder="Password must contain between 8 and 50 characters, it must include lower-case and upper-case letters, digits and special characters (@#$%^&+=)"
         [(ngModel)]="user.password"
         style="height: 40%"
       />

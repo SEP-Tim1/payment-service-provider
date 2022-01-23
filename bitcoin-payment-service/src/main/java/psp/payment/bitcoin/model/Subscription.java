@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import psp.payment.bitcoin.util.SensitiveDataConverter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @NoArgsConstructor
@@ -20,6 +21,7 @@ public class Subscription {
     private long storeId;
     @Column
     @Convert(converter = SensitiveDataConverter.class)
+    @Pattern(regexp = "^[A-Za-z0-9 -_]+$", message = "API Key can contain only letters, digits, blank spaces and a - or _ character")
     private String apiKey;
 
     public Subscription(long storeId, String apiKey) {

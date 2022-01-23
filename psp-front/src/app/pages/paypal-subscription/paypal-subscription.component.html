@@ -16,7 +16,8 @@
                 <input
                   matInput
                   [(ngModel)]="clientId"
-                  required
+                  #id="ngModel"
+                  pattern="^[A-Za-z0-9 -_]{1,}$"
                   name="id"
                   style="height: 40%"
                 />
@@ -29,7 +30,8 @@
                   <input
                     matInput
                     [(ngModel)]="clientSecret"
-                    required
+                    #secret="ngModel"
+                    pattern="^[A-Za-z0-9 -_]{1,}$"
                     name="secret"
                     style="height: 40%"
                   />
@@ -43,7 +45,7 @@
                 id="sendRequestButton"
                 mat-raised-button
                 [disabled]="
-                  this.clientId === '' || this.clientSecret === ''
+                  id.invalid || secret.invalid
                 "
                 color="primary"
                 type="submit"

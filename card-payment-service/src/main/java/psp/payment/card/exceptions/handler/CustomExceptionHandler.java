@@ -3,6 +3,7 @@ package psp.payment.card.exceptions.handler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import psp.payment.card.exceptions.BaseException;
@@ -16,6 +17,11 @@ public class CustomExceptionHandler {
     @ExceptionHandler(value = BaseException.class)
     public ResponseEntity<String> handleBaseException(BaseException e) {
         return new ResponseEntity<>(e.getMessage(), e.getResponseStatusCode());
+    }
+
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = Exception.class)
