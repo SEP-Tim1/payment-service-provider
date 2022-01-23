@@ -30,42 +30,104 @@ spring:
             allowedHeaders: "*"
       routes:
         - id: store-service
+          order: 1
           uri: lb://${STORE_SERVICE_NAME:store-service}
           predicates:
             - Path=/store/**
           filters:
             - StripPrefix=1
+        - id: not-accessible-1
+          order: 0
+          uri: no://op
+          predicates:
+            - Path=/store/store/id/{apiToken}
+            - Method=GET
+          filters:
+            - SetStatus=404
+        - id: not-accessible-2
+          order: 0
+          uri: no://op
+          predicates:
+            - Path=/store/store/token/{id}
+            - Method=GET
+          filters:
+            - SetStatus=404
+        - id: not-accessible-3
+          order: 0
+          uri: no://op
+          predicates:
+            - Path=/store/store/{userId}
+            - Method=GET
+          filters:
+            - SetStatus=404
         - id: auth-service
+          order: 1
           uri: lb://${AUTH_SERVICE_NAME:auth-service}
           predicates:
             - Path=/auth/**
           filters:
             - StripPrefix=1
+        - id: not-accessible-4
+          order: 0
+          uri: no://op
+          predicates:
+            - Path=/auth/token/**
+          filters:
+            - SetStatus=404
         - id: card-payment-service
+          order: 1
           uri: lb://${CARD_SERVICE_NAME:card-payment-service}
           predicates:
             - Path=/card/**
           filters:
             - StripPrefix=1
         - id: payment-request-service
+          order: 1
           uri: lb://${PAYMENT_REQUEST_SERVICE_NAME:payment-request-service}
           predicates:
             - Path=/request/**
           filters:
             - StripPrefix=1
+        - id: not-accessible-5
+          order: 0
+          uri: no://op
+          predicates:
+            - Path=/request/request/{id}
+            - Method=GET
+          filters:
+            - SetStatus=404
+        - id: not-accessible-6
+          order: 0
+          uri: no://op
+          predicates:
+            - Path=/request/request/outcome/{id}
+            - Method=POST
+          filters:
+            - SetStatus=404
+        - id: not-accessible-7
+          order: 0
+          uri: no://op
+          predicates:
+            - Path=/request/request/processed/{id}
+            - Method=GET
+          filters:
+            - SetStatus=404
         - id: bitcoin-payment-service
+          order: 1
           uri: lb://${BITCOIN_SERVICE_NAME:bitcoin-payment-service}
           predicates:
             - Path=/bitcoin/**
           filters:
             - StripPrefix=1
         - id: paypal-payment-service
+          order: 1
           uri: lb://${PAYPAL_SERVICE_NAME:paypal-payment-service}
           predicates:
             - Path=/paypal/**
           filters:
             - StripPrefix=1
         - id: qrcode-payment-service
+          order: 1
           uri: lb://${QRCODE_SERVICE_NAME:qrcode-payment-service}
           predicates:
             - Path=/qrcode/**
