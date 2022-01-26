@@ -45,7 +45,7 @@
                 id="sendRequestButton"
                 mat-raised-button
                 [disabled]="
-                  id.invalid || secret.invalid
+                  id.invalid || secret.invalid || clientId === '' || clientSecret === ''
                 "
                 color="primary"
                 type="submit"

@@ -46,7 +46,6 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
     this.cardService.getInvoiceResponse(this.requestId).subscribe(
       (response) => {
         this.invoiceResponse = response;
-        this.openSnackBar('Payment URL and ID are generated.');
         console.log(response);
         window.location.href = response.paymentUrl.toString();
       },

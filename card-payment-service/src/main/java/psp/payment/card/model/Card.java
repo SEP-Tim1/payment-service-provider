@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 import psp.payment.card.util.SensitiveDataConverter;
+import psp.payment.card.util.SensitiveDataLongConverter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -25,7 +26,7 @@ public class Card {
     private boolean cardPaymentEnabled;
     @Column
     @Nullable
-    @Convert(converter = SensitiveDataConverter.class)
+    @Convert(converter = SensitiveDataLongConverter.class)
     private long mid;
     @Column
     @Nullable

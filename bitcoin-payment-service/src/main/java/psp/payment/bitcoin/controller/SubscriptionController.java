@@ -2,6 +2,7 @@ package psp.payment.bitcoin.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import psp.payment.bitcoin.client.AuthClient;
 import psp.payment.bitcoin.client.StoreClient;
@@ -13,6 +14,8 @@ import psp.payment.bitcoin.util.LoggerUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("sub")
@@ -29,7 +32,7 @@ public class SubscriptionController {
     private LoggerUtil loggerUtil;
 
     @PostMapping("{apiKey}")
-    public void create(HttpServletRequest request,  @PathVariable String apiKey, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException {
+    public void create(HttpServletRequest request,  @PathVariable String apiKey, @RequestHeader("Authorization") String token) throws UnauthenticatedException, UnauthorizedException, MethodArgumentNotValidException {
         if (token == null) {
             log.warn(loggerUtil.getLogMessage(request, "Unauthenticated user made an attempt to create bitcoin payment subscription"));
             throw new UnauthenticatedException("You are not logged in");
@@ -37,6 +40,11 @@ public class SubscriptionController {
         if(!authClient.hasRoles(token, Arrays.asList("MERCHANT"))) {
             log.warn(loggerUtil.getLogMessage(request, "Unauthorized user made an attempt to create bitcoin payment subscription"));
             throw new UnauthorizedException("You don't have a permission to create bitcoin payment subscription");
+        }
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9 -_]+$");
+        Matcher matcher = pattern.matcher(apiKey);
+        if (!matcher.find()) {
+            throw new MethodArgumentNotValidException(null, null);
         }
         long userId = authClient.getUserId(token);
         long storeId = storeClient.getIdByUserId(userId);

@@ -43,7 +43,7 @@
   <div style="text-align: center; margin-top: 50px">
     <button
       id="loginButton"
-      [disabled]="name.invalid || name2.invalid"
+      [disabled]="name.invalid || name2.invalid || user.username === '' || user.password === ''"
       mat-raised-button
       color="primary"
       type="submit"

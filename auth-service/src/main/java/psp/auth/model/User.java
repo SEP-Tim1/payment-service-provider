@@ -23,7 +23,7 @@ public class User {
     @Pattern(regexp = "^[A-Za-z0-9]{8,50}$", message = "Username must contain between 8 and 50 characters and can contain only letters and digits")
     private String username;
     @Column
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,50}$", message = "Password must contain between 8 and 50 characters, it must include lower-case and upper-case letters, digits and special characters (@#$%^&+=)")
+    @Pattern(regexp = "^\\$2[ayb]\\$.{56}$", message = "Password format invalid")
     private String password;
     @Column
     private Role role;

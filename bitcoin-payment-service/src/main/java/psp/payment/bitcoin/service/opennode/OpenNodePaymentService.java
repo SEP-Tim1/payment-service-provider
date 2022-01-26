@@ -9,6 +9,7 @@ import psp.payment.bitcoin.client.PaymentRequestClient;
 import psp.payment.bitcoin.dto.*;
 import psp.payment.bitcoin.exceptions.AlreadyProcessedException;
 import psp.payment.bitcoin.exceptions.NotFoundException;
+import psp.payment.bitcoin.model.Transaction;
 import psp.payment.bitcoin.service.PaymentService;
 import psp.payment.bitcoin.service.SubscriptionService;
 import psp.payment.bitcoin.service.TransactionService;
@@ -60,11 +61,13 @@ public class OpenNodePaymentService implements PaymentService {
         String apiKey = subscriptionService.getApiKey(request.getStoreId());
         OpenNodeResponseDTO response = openNodeClient.createCharge(onRequest, apiKey);
         log.info(loggerUtil.getLogMessage(r, "Create charge request. Payment request (id=" + ") has OpenNode payment created (id=" + response.getData().getId() + ")"));
+        transactionService.save(r, request.getId(), request.getMerchantOrderId(), null);
         return openNodeCheckoutUrl + response.getData().getId();
     }
 
     @Override
     public void processChargeStatus(HttpServletRequest request, ChargeStatusDTO chargeStatus, long requestId) {
+        System.out.println(chargeStatus.getStatus());
         transactionService.save(request, requestId, Long.parseLong(chargeStatus.getOrder_id()), chargeStatus.getStatus());
         PaymentStatusDTO status = convertFromOpenNodeStatus(chargeStatus.getStatus());
         if (status != null) {

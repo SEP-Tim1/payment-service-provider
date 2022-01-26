@@ -65,7 +65,7 @@ service:
     url: https://dev-api.opennode.com/v1/
     checkout: https://dev-checkout.opennode.com/
   ngrok:
-    url: ${NGROK_URL:https://0879-93-87-163-61.ngrok.io/}
+    url: ${NGROK_URL:https://201e-188-2-104-39.ngrok.io/}
 
 encryption:
   key: ${ENCRYPTION_KEY:BWFIFBWEO47329BN}

@@ -49,13 +49,17 @@ public class CardService {
 
     public Card getByStoreId(PaymentRequest request) throws StoreNotFoundException {
         Card card = cardRepository.findByStoreId(request.getStoreId());
-        if(card != null) return card;
+        if(card != null) {
+            return card;
+        }
         throw new StoreNotFoundException();
     }
 
     public Card getByStoreId(long id) throws StoreNotFoundException {
         Card card = cardRepository.findByStoreId(id);
-        if(card != null) return card;
+        if(card != null) {
+            return card;
+        }
         throw new StoreNotFoundException();
     }
 
