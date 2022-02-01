@@ -54,168 +54,188 @@
 # sh ./genCert.sh localhost pcc
 # echo "pcc generated"
 
-cd ./gateway
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../registry registry
-sh ../genTruststore.sh ../auth-service auth-service
-sh ../genTruststore.sh ../store-service store-service
-sh ../genTruststore.sh ../payment-request-service payment-request-service
-sh ../genTruststore.sh ../card-payment-service card-payment-service
-sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
-sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
-sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
-cp gateway.keystore.p12 ../../gateway/src/main/resources/gateway.keystore.p12
-cp truststore.p12 ../../gateway/src/main/resources/truststore.p12
+# cd ./gateway
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../registry registry
+# sh ../genTruststore.sh ../auth-service auth-service
+# sh ../genTruststore.sh ../store-service store-service
+# sh ../genTruststore.sh ../payment-request-service payment-request-service
+# sh ../genTruststore.sh ../card-payment-service card-payment-service
+# sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
+# sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
+# sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
+# cp gateway.keystore.p12 ../../gateway/src/main/resources/gateway.keystore.p12
+# cp truststore.p12 ../../gateway/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./registry
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../gateway gateway
+# sh ../genTruststore.sh ../auth-service auth-service
+# sh ../genTruststore.sh ../store-service store-service
+# sh ../genTruststore.sh ../payment-request-service payment-request-service
+# sh ../genTruststore.sh ../card-payment-service card-payment-service
+# sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
+# sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
+# sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
+# cp registry.keystore.p12 ../../registry/src/main/resources/registry.keystore.p12
+# cp truststore.p12 ../../registry/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./auth-service
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../gateway gateway
+# sh ../genTruststore.sh ../registry registry
+# sh ../genTruststore.sh ../store-service store-service
+# sh ../genTruststore.sh ../payment-request-service payment-request-service
+# sh ../genTruststore.sh ../card-payment-service card-payment-service
+# sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
+# sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
+# sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
+# cp auth-service.keystore.p12 ../../auth-service/src/main/resources/auth-service.keystore.p12
+# cp truststore.p12 ../../auth-service/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./store-service
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../gateway gateway
+# sh ../genTruststore.sh ../registry registry
+# sh ../genTruststore.sh ../auth-service auth-service
+# sh ../genTruststore.sh ../payment-request-service payment-request-service
+# sh ../genTruststore.sh ../card-payment-service card-payment-service
+# sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
+# sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
+# sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
+# cp store-service.keystore.p12 ../../store-service/src/main/resources/store-service.keystore.p12
+# cp truststore.p12 ../../store-service/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./payment-request-service
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../webshop-back webshop-back
+# sh ../genTruststore.sh ../gateway gateway
+# sh ../genTruststore.sh ../registry registry
+# sh ../genTruststore.sh ../auth-service auth-service
+# sh ../genTruststore.sh ../store-service store-service
+# sh ../genTruststore.sh ../card-payment-service card-payment-service
+# sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
+# sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
+# sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
+# cp payment-request-service.keystore.p12 ../../payment-request-service/src/main/resources/payment-request-service.keystore.p12
+# cp truststore.p12 ../../payment-request-service/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./card-payment-service
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../bank1-back bank1-back
+# sh ../genTruststore.sh ../bank2-back bank2-back
+# sh ../genTruststore.sh ../gateway gateway
+# sh ../genTruststore.sh ../registry registry
+# sh ../genTruststore.sh ../auth-service auth-service
+# sh ../genTruststore.sh ../store-service store-service
+# sh ../genTruststore.sh ../payment-request-service payment-request-service
+# sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
+# sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
+# sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
+# cp card-payment-service.keystore.p12 ../../card-payment-service/src/main/resources/card-payment-service.keystore.p12
+# cp truststore.p12 ../../card-payment-service/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./bitcoin-payment-service
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../gateway gateway
+# sh ../genTruststore.sh ../registry registry
+# sh ../genTruststore.sh ../auth-service auth-service
+# sh ../genTruststore.sh ../store-service store-service
+# sh ../genTruststore.sh ../payment-request-service payment-request-service
+# sh ../genTruststore.sh ../card-payment-service card-payment-service
+# sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
+# sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
+# cp bitcoin-payment-service.keystore.p12 ../../bitcoin-payment-service/src/main/resources/bitcoin-payment-service.keystore.p12
+# cp truststore.p12 ../../bitcoin-payment-service/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./qrcode-payment-service
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../bank1-back bank1-back
+# sh ../genTruststore.sh ../bank2-back bank2-back
+# sh ../genTruststore.sh ../gateway gateway
+# sh ../genTruststore.sh ../registry registry
+# sh ../genTruststore.sh ../auth-service auth-service
+# sh ../genTruststore.sh ../store-service store-service
+# sh ../genTruststore.sh ../payment-request-service payment-request-service
+# sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
+# sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
+# sh ../genTruststore.sh ../card-payment-service card-payment-service
+# cp qrcode-payment-service.keystore.p12 ../../qrcode-payment-service/src/main/resources/qrcode-payment-service.keystore.p12
+# cp truststore.p12 ../../qrcode-payment-service/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./paypal-payment-service
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../gateway gateway
+# sh ../genTruststore.sh ../registry registry
+# sh ../genTruststore.sh ../auth-service auth-service
+# sh ../genTruststore.sh ../store-service store-service
+# sh ../genTruststore.sh ../payment-request-service payment-request-service
+# sh ../genTruststore.sh ../card-payment-service card-payment-service
+# sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
+# sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
+# cp paypal-payment-service.keystore.p12 ../../paypal-payment-service/src/main/resources/paypal-payment-service.keystore.p12
+# cp truststore.p12 ../../paypal-payment-service/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./bank1-back
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../bank2-back bank2-back
+# sh ../genTruststore.sh ../pcc pcc
+# sh ../genTruststore.sh ../gateway gateway
+# cp bank1-back.keystore.p12 ../../../first-bank/first-bank-back/src/main/resources/bank1-back.keystore.p12
+# cp truststore.p12 ../../../first-bank/first-bank-back/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./bank2-back
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../bank1-back bank1-back
+# sh ../genTruststore.sh ../pcc pcc
+# sh ../genTruststore.sh ../gateway gateway
+# cp bank2-back.keystore.p12 ../../../second-bank/second-bank-back/src/main/resources/bank2-back.keystore.p12
+# cp truststore.p12 ../../../second-bank/second-bank-back/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./pcc
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../bank1-back bank1-back
+# sh ../genTruststore.sh ../bank2-back bank2-back
+# cp pcc.keystore.p12 ../../../payment-card-center/src/main/resources/pcc.keystore.p12
+# cp truststore.p12 ../../../payment-card-center/src/main/resources/truststore.p12
+# cd ../
+
+# cd ./webshop-back
+# sh ../genTruststore.sh ../CA myCA
+# sh ../genTruststore.sh ../gateway gateway
+# cp webshop-back.keystore.p12 ../../../e-commerce-platform/web-shop-back/src/main/resources/webshop-back.keystore.p12
+# cp truststore.p12 ../../../e-commerce-platform/web-shop-back/src/main/resources/truststore.p12
+# cd ../
+
+cd ./webshop-front
+cp webshop-front.key ../../../e-commerce-platform/web-shop-front/ssl/webshop-front.key
+cp webshop-front.crt ../../../e-commerce-platform/web-shop-front/ssl/webshop-front.crt
 cd ../
 
-cd ./registry
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../gateway gateway
-sh ../genTruststore.sh ../auth-service auth-service
-sh ../genTruststore.sh ../store-service store-service
-sh ../genTruststore.sh ../payment-request-service payment-request-service
-sh ../genTruststore.sh ../card-payment-service card-payment-service
-sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
-sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
-sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
-cp registry.keystore.p12 ../../registry/src/main/resources/registry.keystore.p12
-cp truststore.p12 ../../registry/src/main/resources/truststore.p12
+cd ./bank1-front
+cp bank1-front.key ../../../first-bank/first-bank-front/ssl/bank1-front.key
+cp bank1-front.crt ../../../first-bank/first-bank-front/ssl/bank1-front.crt
 cd ../
 
-cd ./auth-service
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../gateway gateway
-sh ../genTruststore.sh ../registry registry
-sh ../genTruststore.sh ../store-service store-service
-sh ../genTruststore.sh ../payment-request-service payment-request-service
-sh ../genTruststore.sh ../card-payment-service card-payment-service
-sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
-sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
-sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
-cp auth-service.keystore.p12 ../../auth-service/src/main/resources/auth-service.keystore.p12
-cp truststore.p12 ../../auth-service/src/main/resources/truststore.p12
+cd ./bank2-front
+cp bank2-front.key ../../../second-bank/second-bank-front/ssl/bank2-front.key
+cp bank2-front.crt ../../../second-bank/second-bank-front/ssl/bank2-front.crt
 cd ../
 
-cd ./store-service
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../gateway gateway
-sh ../genTruststore.sh ../registry registry
-sh ../genTruststore.sh ../auth-service auth-service
-sh ../genTruststore.sh ../payment-request-service payment-request-service
-sh ../genTruststore.sh ../card-payment-service card-payment-service
-sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
-sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
-sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
-cp store-service.keystore.p12 ../../store-service/src/main/resources/store-service.keystore.p12
-cp truststore.p12 ../../store-service/src/main/resources/truststore.p12
-cd ../
-
-cd ./payment-request-service
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../webshop-back webshop-back
-sh ../genTruststore.sh ../gateway gateway
-sh ../genTruststore.sh ../registry registry
-sh ../genTruststore.sh ../auth-service auth-service
-sh ../genTruststore.sh ../store-service store-service
-sh ../genTruststore.sh ../card-payment-service card-payment-service
-sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
-sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
-sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
-cp payment-request-service.keystore.p12 ../../payment-request-service/src/main/resources/payment-request-service.keystore.p12
-cp truststore.p12 ../../payment-request-service/src/main/resources/truststore.p12
-cd ../
-
-cd ./card-payment-service
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../bank1-back bank1-back
-sh ../genTruststore.sh ../bank2-back bank2-back
-sh ../genTruststore.sh ../gateway gateway
-sh ../genTruststore.sh ../registry registry
-sh ../genTruststore.sh ../auth-service auth-service
-sh ../genTruststore.sh ../store-service store-service
-sh ../genTruststore.sh ../payment-request-service payment-request-service
-sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
-sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
-sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
-cp card-payment-service.keystore.p12 ../../card-payment-service/src/main/resources/card-payment-service.keystore.p12
-cp truststore.p12 ../../card-payment-service/src/main/resources/truststore.p12
-cd ../
-
-cd ./bitcoin-payment-service
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../gateway gateway
-sh ../genTruststore.sh ../registry registry
-sh ../genTruststore.sh ../auth-service auth-service
-sh ../genTruststore.sh ../store-service store-service
-sh ../genTruststore.sh ../payment-request-service payment-request-service
-sh ../genTruststore.sh ../card-payment-service card-payment-service
-sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
-sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
-cp bitcoin-payment-service.keystore.p12 ../../bitcoin-payment-service/src/main/resources/bitcoin-payment-service.keystore.p12
-cp truststore.p12 ../../bitcoin-payment-service/src/main/resources/truststore.p12
-cd ../
-
-cd ./qrcode-payment-service
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../bank1-back bank1-back
-sh ../genTruststore.sh ../bank2-back bank2-back
-sh ../genTruststore.sh ../gateway gateway
-sh ../genTruststore.sh ../registry registry
-sh ../genTruststore.sh ../auth-service auth-service
-sh ../genTruststore.sh ../store-service store-service
-sh ../genTruststore.sh ../payment-request-service payment-request-service
-sh ../genTruststore.sh ../paypal-payment-service paypal-payment-service
-sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
-sh ../genTruststore.sh ../card-payment-service card-payment-service
-cp qrcode-payment-service.keystore.p12 ../../qrcode-payment-service/src/main/resources/qrcode-payment-service.keystore.p12
-cp truststore.p12 ../../qrcode-payment-service/src/main/resources/truststore.p12
-cd ../
-
-cd ./paypal-payment-service
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../gateway gateway
-sh ../genTruststore.sh ../registry registry
-sh ../genTruststore.sh ../auth-service auth-service
-sh ../genTruststore.sh ../store-service store-service
-sh ../genTruststore.sh ../payment-request-service payment-request-service
-sh ../genTruststore.sh ../card-payment-service card-payment-service
-sh ../genTruststore.sh ../bitcoin-payment-service bitcoin-payment-service
-sh ../genTruststore.sh ../qrcode-payment-service qrcode-payment-service
-cp paypal-payment-service.keystore.p12 ../../paypal-payment-service/src/main/resources/paypal-payment-service.keystore.p12
-cp truststore.p12 ../../paypal-payment-service/src/main/resources/truststore.p12
-cd ../
-
-cd ./bank1-back
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../bank2-back bank2-back
-sh ../genTruststore.sh ../pcc pcc
-sh ../genTruststore.sh ../gateway gateway
-cp bank1-back.keystore.p12 ../../../first-bank/first-bank-back/src/main/resources/bank1-back.keystore.p12
-cp truststore.p12 ../../../first-bank/first-bank-back/src/main/resources/truststore.p12
-cd ../
-
-cd ./bank2-back
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../bank1-back bank1-back
-sh ../genTruststore.sh ../pcc pcc
-sh ../genTruststore.sh ../gateway gateway
-cp bank2-back.keystore.p12 ../../../second-bank/second-bank-back/src/main/resources/bank2-back.keystore.p12
-cp truststore.p12 ../../../second-bank/second-bank-back/src/main/resources/truststore.p12
-cd ../
-
-cd ./pcc
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../bank1-back bank1-back
-sh ../genTruststore.sh ../bank2-back bank2-back
-cp pcc.keystore.p12 ../../../payment-card-center/src/main/resources/pcc.keystore.p12
-cp truststore.p12 ../../../payment-card-center/src/main/resources/truststore.p12
-cd ../
-
-cd ./webshop-back
-sh ../genTruststore.sh ../CA myCA
-sh ../genTruststore.sh ../gateway gateway
-cp webshop-back.keystore.p12 ../../../e-commerce-platform/web-shop-back/src/main/resources/webshop-back.keystore.p12
-cp truststore.p12 ../../../e-commerce-platform/web-shop-back/src/main/resources/truststore.p12
+cd ./psp-front
+cp psp-front.key ../../psp-front/ssl/psp-front.key
+cp psp-front.crt ../../psp-front/ssl/psp-front.crt
 cd ../
 
 # sh ../genTruststore.sh ../CA myCA
