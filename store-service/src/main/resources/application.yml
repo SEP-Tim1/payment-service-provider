@@ -62,4 +62,7 @@ token:
   secret: ${TOKEN_SECRET:5B43E507D1232852D06EEDD2E30A24F10ABC72AC114D60D6BB592A15BC505B8E}
 
 encryption:
-  key: ${ENCRYPTION_KEY:BWFIFBWEO47329BN}
+  keystore-name: ${ENCRYPTION_KEYSTORE_NAME:D:\\enc\\encryption.p12}
+  keystore-password: ${ENCRYPTION_KEYSTORE_PASSWORD:password}
+  keystore-entry-name: ${ENCRYPTION_KEYSTORE_ENTRY_NAME:key}
+  keystore-entry-password: ${ENCRYPTION_KEYSTORE_ENTRY_PASSWORD:password}
