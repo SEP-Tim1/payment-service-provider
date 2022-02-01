@@ -100,6 +100,7 @@ public class CardService {
             Card card = getByStoreId(request.getStoreId());
             List<ServiceInstance> gateway = discoveryClient.getInstances(gatewayName);
             String host = gateway.get(0).getHost();
+            System.out.println(host);
             int port = gateway.get(0).getPort();
             String callbackUrl = "https://" + host + ":" + port + "/card/card/bank-payment-response";
             InvoiceResponseDTO response = sendInvoice(r, new InvoiceDTO(request, card, callbackUrl), card.getBank());

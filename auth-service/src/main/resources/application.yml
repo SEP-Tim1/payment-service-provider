@@ -53,6 +53,7 @@ server:
   error:
     include-message: always
     include-binding-errors: always
+  address: 0.0.0.0
 
 jwt:
   secret: ${JWT_SECRET:5B43E507D0762852D06EEDD2E30A24F10ABC72AC114D60D6BB592A15BC505B8E}
