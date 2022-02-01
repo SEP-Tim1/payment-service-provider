@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import psp.auth.dto.UserDTO;
+import psp.auth.exceptions.AccountBlockedException;
 import psp.auth.exceptions.InvalidArgumentException;
 import psp.auth.exceptions.NotFoundException;
 import psp.auth.exceptions.NotUniqueException;
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public String login(HttpServletRequest request, @RequestBody @Valid UserDTO dto) throws InvalidArgumentException, NotFoundException {
+    public String login(HttpServletRequest request, @RequestBody @Valid UserDTO dto) throws InvalidArgumentException, NotFoundException, AccountBlockedException {
         return service.logIn(request, dto);
     }
 }
