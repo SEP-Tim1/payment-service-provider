@@ -56,10 +56,16 @@ server:
   address: 0.0.0.0
 
 service:
-  auth:
-    name: ${AUTH_SERVICE_NAME:auth-service}
+  bank1:
+    url: https://${BANK1_HOST:localhost}:${BANK1_PORT:8061}
+  bank2:
+    url: https://${BANK2_HOST:localhost}:${BANK2_PORT:8062}
   payment-request:
     name: ${PAYMENT_REQUEST_SERVICE_NAME:payment-request-service}
+  gateway:
+    name: ${GATEWAY_NAME:gateway}
+  auth:
+    name: ${AUTH_SERVICE_NAME:auth-service}
   store:
     name: ${STORE_SERVICE_NAME:store-service}
 

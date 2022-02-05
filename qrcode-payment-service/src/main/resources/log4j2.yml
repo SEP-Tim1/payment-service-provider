@@ -21,7 +21,7 @@ Configuration:
 
   Loggers:
     logger:
-      - name: psp.payment.paypal
+      - name: psp.payment.qrcode
         level: info
         additivity: false
         AppenderRef:
