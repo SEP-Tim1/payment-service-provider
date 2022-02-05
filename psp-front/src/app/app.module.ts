@@ -36,6 +36,7 @@ import { ExecutePaymentPageComponent } from './pages/execute-payment-page/execut
 import { ExecuteAgreementPageComponent } from './pages/execute-agreement-page/execute-agreement-page.component';
 import { CancelPaymentPageComponent } from './pages/cancel-payment-page/cancel-payment-page.component';
 import { CancelAgreementPageComponent } from './pages/cancel-agreement-page/cancel-agreement-page.component';
+import { QrMerchantInfoComponent } from './pages/qr-merchant-info/qr-merchant-info.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { CancelAgreementPageComponent } from './pages/cancel-agreement-page/canc
     ExecuteAgreementPageComponent,
     CancelPaymentPageComponent,
     CancelAgreementPageComponent,
+    QrMerchantInfoComponent,
   ],
   imports: [
     BrowserModule,

@@ -22,13 +22,17 @@ import psp.payment.qrcode.model.Transaction;
 import psp.payment.qrcode.repositories.CardRepository;
 import psp.payment.qrcode.util.LoggerUtil;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -126,7 +130,7 @@ public class QRService {
             String host = gateway.get(0).getHost();
             System.out.println(host);
             int port = gateway.get(0).getPort();
-            String callbackUrl = "https://" + host + ":" + port + "/card/card/bank-payment-response";
+            String callbackUrl = "https://" + host + ":" + port + "/qrcode/qr/bank-payment-response";
             InvoiceResponseDTO response = sendInvoice(r, new InvoiceDTO(request, card, callbackUrl), card.getBank());
             log.info(loggerUtil.getLogMessage(r, "Invoice for request (id=" + requestId + ") created. Payment (id=" + response.getPaymentId() + ", url=" + response.getPaymentUrl() + ") received"));
             return response;
@@ -179,11 +183,13 @@ public class QRService {
     public String generateQR(long requestId) throws StoreNotFoundException, QRCodeNotGeneratedException {
         PaymentRequest request = getByRequestId(requestId);
         Card card = getByStoreId(request);
-        String path = new File("src/main/resources/qrs").getAbsolutePath();
-        String filePath = path + "/qr" + request.getId() + LocalDateTime.now() + ".png";
+        String fileName = "/qr" + request.getId() + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss")) + ".png";
+        String path = "qrcode-payment-service/src/main/resources/qrs" + fileName;
+
+        String filePath = new File(path).getAbsolutePath();
         try {
             generateQRCodeImage(QRText(card, request.getAmount(), request.getCurrency()), 300, 300, filePath);
-            return filePath;
+            return fileName;
         } catch (WriterException | IOException e) {
             e.printStackTrace();
             throw new QRCodeNotGeneratedException();

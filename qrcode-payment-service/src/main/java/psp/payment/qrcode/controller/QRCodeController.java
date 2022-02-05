@@ -2,8 +2,13 @@ package psp.payment.qrcode.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import psp.payment.qrcode.clients.AuthClient;
 import psp.payment.qrcode.clients.StoreClient;
 import psp.payment.qrcode.dtos.*;
@@ -13,6 +18,13 @@ import psp.payment.qrcode.util.LoggerUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 @RestController
@@ -41,6 +53,22 @@ public class QRCodeController {
             return ResponseEntity.badRequest().body("Store not found.");
         } catch (QRCodeNotGeneratedException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/image/{image:.+}")
+    public @ResponseBody ResponseEntity<UrlResource> getImage(@PathVariable(name = "image") String image){
+        try {
+            String path = "qrcode-payment-service/src/main/resources/qrs";
+            String storageDirectoryPath = new File(path).getAbsolutePath();
+            UrlResource resource = new UrlResource("file:" + storageDirectoryPath + File.separator + image);
+            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                    .contentType(MediaTypeFactory
+                            .getMediaType(resource)
+                            .orElse(MediaType.APPLICATION_OCTET_STREAM))
+                    .body(new UrlResource("file:" + storageDirectoryPath + File.separator + image));
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 

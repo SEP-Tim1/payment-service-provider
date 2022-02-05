@@ -9,6 +9,7 @@ import { ExecutePaymentPageComponent } from './pages/execute-payment-page/execut
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { MerchantInfoPageComponent } from './pages/merchant-info-page/merchant-info-page.component';
 import { PaypalSubscriptionComponent } from './pages/paypal-subscription/paypal-subscription.component';
+import { QrMerchantInfoComponent } from './pages/qr-merchant-info/qr-merchant-info.component';
 import { RegistrationPageComponent } from './pages/registration-page/registration-page.component';
 import { StorePageComponent } from './pages/store-page/store-page.component';
 import { SubscriptionsPageComponent } from './pages/subscriptions-page/subscriptions-page.component';
@@ -25,6 +26,11 @@ const routes: Routes = [
   {
     path: 'merchant',
     component: MerchantInfoPageComponent,
+    data: { expextedRoles: ['MERCHANT'] },
+  },
+  {
+    path: 'qrcode',
+    component: QrMerchantInfoComponent,
     data: { expextedRoles: ['MERCHANT'] },
   },
   {
@@ -46,7 +52,7 @@ const routes: Routes = [
   { path: 'paypal/execute/sub/:id', component: ExecuteAgreementPageComponent },
   { path: 'paypal/cancel/sub/:id', component: CancelAgreementPageComponent },
   { path: 'paypal/execute', component: ExecutePaymentPageComponent },
-  { path: 'paypal/cancel/:id', component: CancelPaymentPageComponent }
+  { path: 'paypal/cancel/:id', component: CancelPaymentPageComponent },
 ];
 
 @NgModule({

@@ -6,6 +6,8 @@ import { BitcoinService } from 'src/app/services/bitcoin.service';
 import { CardService } from 'src/app/services/card.service';
 import { PaymentRequestService } from 'src/app/services/payment-request.service';
 import { PaypalService } from 'src/app/services/paypal.service';
+import { QRService } from 'src/app/services/qr.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-customer-payment-methods-page',
@@ -19,8 +21,10 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
     private service: PaymentRequestService,
     private bitcoinService: BitcoinService,
     private cardService: CardService,
+    private qrService: QRService,
     private paypalService: PaypalService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private domSanitizer: DomSanitizer
   ) {}
 
   requestId = -1;
@@ -28,6 +32,8 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
   qrcode = false;
   paypal = false;
   bitcoin = false;
+  image = false;
+  imageurl: SafeResourceUrl = '';
 
   invoiceResponse = new InvoiceResponse('', 0);
 
@@ -56,12 +62,33 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
     );
   }
 
+  qrcodePayment() {
+    this.qrService.getInvoiceResponse(this.requestId).subscribe(
+      (response) => {
+        this.invoiceResponse = response;
+        localStorage.setItem('paymentLink', response.paymentUrl.toString());
+        console.log(response);
+        this.qrService.getPaymentQRCode(this.requestId).subscribe((qrcode) => {
+          localStorage.setItem('qrcode', qrcode.url);
+          console.log(qrcode.url);
+          this.imageurl =
+            'https://localhost:8090/qrcode/qr/image/' + qrcode.url;
+          this.image = true;
+        });
+      },
+      (error) => {
+        console.log(error.error);
+        this.openSnackBar(error.error);
+      }
+    );
+  }
+
   bitcoinPayment() {
     this.bitcoinService.createCharge(this.requestId).subscribe(
-      redirectUrl => {
+      (redirectUrl) => {
         window.location.href = redirectUrl;
       },
-      error => {
+      (error) => {
         console.log(error);
       }
     );
@@ -69,13 +96,13 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
 
   paypalPayment() {
     this.paypalService.pay(this.requestId).subscribe(
-      redirectUrl => {
+      (redirectUrl) => {
         window.location.href = redirectUrl;
       },
-      error => {
+      (error) => {
         console.log(error);
       }
-    )
+    );
   }
 
   checkAvailablePaymentMethods() {
@@ -88,7 +115,7 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
         this.card = response.cardPaymentEnabled;
         this.checkBitcoin();
       },
-      _ => {
+      (_) => {
         this.checkBitcoin();
       }
     );
@@ -96,38 +123,52 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
 
   checkBitcoin() {
     this.bitcoinService.isEnabledForRequest(this.requestId).subscribe(
-      enabled => {
+      (enabled) => {
         this.bitcoin = enabled;
         this.checkPayPal();
       },
-      _ => {
+      (_) => {
         this.checkPayPal();
       }
-    )
+    );
   }
 
   checkPayPal() {
     this.paypalService.isEnabled(this.requestId).subscribe(
-      enabled => {
+      (enabled) => {
         this.paypal = enabled;
+
+        this.checkQRCode();
+      },
+      (_) => {
+        this.checkQRCode();
+      }
+    );
+  }
+
+  checkQRCode() {
+    this.qrService.isQRPayementEnabled(this.requestId).subscribe(
+      (enabled) => {
+        this.qrcode = enabled.qrPaymentEnabled;
         this.checkAll();
       },
-      _ => {
+      (_) => {
         this.checkAll();
       }
-    )
+    );
   }
 
   checkAll() {
     if (!this.card && !this.qrcode && !this.paypal && !this.bitcoin) {
       this.service.getFailureUrl(this.requestId).subscribe(
-      (redirectUrl) => {
-        console.log(redirectUrl);
-        window.location.href = redirectUrl;
-      },
-      _ => {
-        this.router.navigate(['']);
-      });
+        (redirectUrl) => {
+          console.log(redirectUrl);
+          window.location.href = redirectUrl;
+        },
+        (_) => {
+          this.router.navigate(['']);
+        }
+      );
     }
   }
 

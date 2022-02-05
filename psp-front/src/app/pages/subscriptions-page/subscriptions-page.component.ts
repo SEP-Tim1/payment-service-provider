@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BitcoinService } from 'src/app/services/bitcoin.service';
 import { CardService } from 'src/app/services/card.service';
 import { PaypalService } from 'src/app/services/paypal.service';
+import { QRService } from 'src/app/services/qr.service';
 
 @Component({
   selector: 'app-subscriptions-page',
@@ -19,6 +20,7 @@ export class SubscriptionsPageComponent implements OnInit {
 
   constructor(
     private cardService: CardService,
+    private qrService: QRService,
     private bitcoinService: BitcoinService,
     private paypalService: PaypalService,
     private snackBar: MatSnackBar,
@@ -34,6 +36,7 @@ export class SubscriptionsPageComponent implements OnInit {
     this.cardPaymentEnabled();
     this.bitcoinPaymentEnabled();
     this.paypalPaymentEnabled();
+    this.qrPaymentEnabled();
   }
 
   cardPaymentEnabled() {
@@ -48,23 +51,34 @@ export class SubscriptionsPageComponent implements OnInit {
     );
   }
 
-  bitcoinPaymentEnabled() {
-    this.bitcoinService.subscribed(this.storeId).subscribe(
-      subscribed => {
-        this.bitcoin = subscribed;
+  qrPaymentEnabled() {
+    this.qrService.isQRPayementEnabledForStore(this.storeId).subscribe(
+      (response) => {
+        console.log('QRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR');
+        console.log(response);
+        this.qrcode = response.qrPaymentEnabled;
+      },
+      (error) => {
+        console.log(error.error);
       }
-    )
+    );
+  }
+
+  bitcoinPaymentEnabled() {
+    this.bitcoinService.subscribed(this.storeId).subscribe((subscribed) => {
+      this.bitcoin = subscribed;
+    });
   }
 
   paypalPaymentEnabled() {
     this.paypalService.isSub().subscribe(
-      subscribed => {
+      (subscribed) => {
         this.paypal = subscribed;
       },
-      error => {
+      (error) => {
         console.log(error.error);
       }
-    )
+    );
   }
 
   cardPayment() {
@@ -89,14 +103,14 @@ export class SubscriptionsPageComponent implements OnInit {
       this.router.navigate(['bitcoin']);
     } else {
       this.bitcoinService.deleteSubscription().subscribe(
-        _ => {
+        (_) => {
           this.bitcoin = false;
-          this.openSnackBar("Bitcoin payments are disabled");
+          this.openSnackBar('Bitcoin payments are disabled');
         },
-        error => {
+        (error) => {
           this.openSnackBar(error.error);
         }
-      )
+      );
     }
   }
 
@@ -105,19 +119,32 @@ export class SubscriptionsPageComponent implements OnInit {
       this.router.navigate(['paypal']);
     } else {
       this.paypalService.deleteSub().subscribe(
-        _ => {
+        (_) => {
           this.paypal = false;
           this.openSnackBar('PayPal payments are disabled');
         },
-        error => {
+        (error) => {
           this.openSnackBar(error.error);
         }
-      )
+      );
     }
   }
 
   qrcodeToggle() {
-    this.qrcode = !this.qrcode;
+    if (!this.qrcode) {
+      this.router.navigate(['qrcode']);
+    } else {
+      this.qrService.disable(this.storeId).subscribe(
+        (response) => {
+          console.log(response);
+          this.qrcode = false;
+          this.openSnackBar('QR Code payment is disabled.');
+        },
+        (error) => {
+          this.openSnackBar(error.error);
+        }
+      );
+    }
   }
 
   openSnackBar(message: string) {
