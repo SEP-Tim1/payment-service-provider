@@ -47,8 +47,8 @@ public class QRService {
     private final Bank1Client bank1;
     private final Bank2Client bank2;
 
-    @Value("${service.gateway.name}")
-    private String gatewayName;
+    @Value("${service.gateway.address}")
+    private String gatewayAddress;
 
     public QRService(Client client, CardRepository cardRepository, TransactionService transactionService, LoggerUtil loggerUtil, Bank1Client bank1, Bank2Client bank2, DiscoveryClient discoveryClient) {
         this.client = client;
@@ -126,11 +126,8 @@ public class QRService {
         try {
             PaymentRequest request = getByRequestId(requestId);
             Card card = getByStoreId(request.getStoreId());
-            List<ServiceInstance> gateway = discoveryClient.getInstances(gatewayName);
-            String host = gateway.get(0).getHost();
-            System.out.println(host);
-            int port = gateway.get(0).getPort();
-            String callbackUrl = "https://" + host + ":" + port + "/qrcode/qr/bank-payment-response";
+            String callbackUrl = gatewayAddress + "/qrcode/qr/bank-payment-response";
+            System.out.println(callbackUrl);
             InvoiceResponseDTO response = sendInvoice(r, new InvoiceDTO(request, card, callbackUrl), card.getBank());
             log.info(loggerUtil.getLogMessage(r, "Invoice for request (id=" + requestId + ") created. Payment (id=" + response.getPaymentId() + ", url=" + response.getPaymentUrl() + ") received"));
             return response;

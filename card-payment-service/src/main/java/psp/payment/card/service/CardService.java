@@ -3,7 +3,6 @@ package psp.payment.card.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 import psp.payment.card.client.Bank1Client;
@@ -32,8 +31,8 @@ public class CardService {
     private final Bank2Client bank2;
     private final TransactionService transactionService;
     private DiscoveryClient discoveryClient;
-    @Value("${service.gateway.name}")
-    private String gatewayName;
+    @Value("${service.gateway.address}")
+    private String gatewayAddress;
     private LoggerUtil loggerUtil;
 
     @Autowired
@@ -98,11 +97,8 @@ public class CardService {
         try {
             PaymentRequest request = getByRequestId(requestId);
             Card card = getByStoreId(request.getStoreId());
-            List<ServiceInstance> gateway = discoveryClient.getInstances(gatewayName);
-            String host = gateway.get(0).getHost();
-            System.out.println(host);
-            int port = gateway.get(0).getPort();
-            String callbackUrl = "https://" + host + ":" + port + "/card/card/bank-payment-response";
+            String callbackUrl = gatewayAddress + "/card/card/bank-payment-response";
+            System.out.println(callbackUrl);
             InvoiceResponseDTO response = sendInvoice(r, new InvoiceDTO(request, card, callbackUrl), card.getBank());
             log.info(loggerUtil.getLogMessage(r, "Invoice for request (id=" + requestId + ") created. Payment (id=" + response.getPaymentId() + ", url=" + response.getPaymentUrl() + ") received"));
             return response;

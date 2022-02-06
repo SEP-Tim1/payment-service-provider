@@ -63,7 +63,7 @@ service:
   payment-request:
     name: ${PAYMENT_REQUEST_SERVICE_NAME:payment-request-service}
   gateway:
-    name: ${GATEWAY_NAME:gateway}
+    address: ${GATEWAY_ADDRESS:https://localhost:8090}
   auth:
     name: ${AUTH_SERVICE_NAME:auth-service}
   store:
