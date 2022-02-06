@@ -16,6 +16,10 @@ export class SubscriptionsPageComponent implements OnInit {
   qrcode = false;
   paypal = false;
   bitcoin = false;
+  cardDisabled = false;
+  qrCodeDisabled = false;
+  paypalDisabled = false;
+  bitcoinDisabled = false;
   storeId = 0;
 
   constructor(
@@ -47,6 +51,9 @@ export class SubscriptionsPageComponent implements OnInit {
       },
       (error) => {
         console.log(error.error);
+        if (error.status.toString()[0] === '5') {
+          this.cardDisabled = true;
+        }
       }
     );
   }
@@ -60,14 +67,25 @@ export class SubscriptionsPageComponent implements OnInit {
       },
       (error) => {
         console.log(error.error);
+        if (error.status.toString()[0] === '5') {
+          this.qrCodeDisabled = true;
+        }
       }
     );
   }
 
   bitcoinPaymentEnabled() {
-    this.bitcoinService.subscribed(this.storeId).subscribe((subscribed) => {
-      this.bitcoin = subscribed;
-    });
+    this.bitcoinService.subscribed(this.storeId).subscribe(
+      (subscribed) => {
+        this.bitcoin = subscribed;
+      },
+      (error) => {
+        console.log(error.error);
+        if (error.status.toString()[0] === '5') {
+          this.bitcoinDisabled = true;
+        }
+      }
+    );
   }
 
   paypalPaymentEnabled() {
@@ -77,6 +95,9 @@ export class SubscriptionsPageComponent implements OnInit {
       },
       (error) => {
         console.log(error.error);
+        if (error.status.toString()[0] === '5') {
+          this.paypalDisabled = true;
+        }
       }
     );
   }

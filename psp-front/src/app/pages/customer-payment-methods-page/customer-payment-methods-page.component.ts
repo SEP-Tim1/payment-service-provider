@@ -172,6 +172,12 @@ export class CustomerPaymentMethodsPageComponent implements OnInit {
     }
   }
 
+  showMessage() {
+    this.openSnackBar(
+      'Payment has not been carried out! Please try again, or proceed with another payment method.'
+    );
+  }
+
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Okay', {
       duration: 5000,

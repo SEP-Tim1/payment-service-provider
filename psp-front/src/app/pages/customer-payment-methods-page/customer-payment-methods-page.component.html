@@ -6,6 +6,7 @@
         <button
           id="cardButton"
           [disabled]="!card"
+          *ngIf="card"
           mat-raised-button
           color="primary"
           type="button"
@@ -18,6 +19,7 @@
       <div style="text-align: center; margin-top: 50px">
         <button
           id="paypalButton"
+          *ngIf="paypal"
           [disabled]="!paypal"
           mat-raised-button
           color="primary"
@@ -31,6 +33,7 @@
       <div style="text-align: center; margin-top: 50px">
         <button
           id="qrButton"
+          *ngIf="qrcode"
           [disabled]="!qrcode"
           mat-raised-button
           color="primary"
@@ -44,6 +47,7 @@
       <div style="text-align: center; margin-top: 50px; margin-bottom: 30px">
         <button
           id="bitcoinButton"
+          *ngIf="bitcoin"
           [disabled]="!bitcoin"
           mat-raised-button
           color="primary"
@@ -57,7 +61,26 @@
     </form>
     <div *ngIf="image">
       <h3 style="text-align: center; font-weight: 500">Scan QR code to pay:</h3>
-      <img [src]="imageurl" />
+      <img
+        [src]="imageurl"
+        style="display: block; margin-left: auto; margin-right: auto"
+      />
+      <button
+        mat-raised-button
+        type="button"
+        style="
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          margin-top: 5%;
+          padding: 12px 32px;
+          background-color: rgb(61, 126, 9);
+          color: white;
+        "
+        (click)="showMessage()"
+      >
+        Proceed to Payment Confirmation
+      </button>
     </div>
   </mat-card>
 </div>

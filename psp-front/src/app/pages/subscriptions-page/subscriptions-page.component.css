@@ -19,3 +19,7 @@
   padding-top: 20px;
   opacity: 80%;
 }
+
+.ovo[disabled] {
+  background-color: lightgrey !important;
+}
