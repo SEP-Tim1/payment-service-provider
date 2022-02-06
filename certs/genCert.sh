@@ -26,6 +26,7 @@ DNS.1 = $DOMAIN
 IP.1 = 127.0.0.1
 IP.2 = 192.168.43.241
 IP.3 = 192.168.0.16
+IP.4 = 192.168.43.190
 EOF
 #generating a certificate
 winpty openssl x509 -req -in $DIRECTORY.csr -CA ../CA/myCA.crt -CAkey ../CA/myCA.key -CAcreateserial \
