@@ -6,7 +6,9 @@
         <button
           id="cardButton"
           mat-raised-button
+          class="ovo"
           [ngStyle]="{ 'background-color': card ? 'green' : '#1565c0' }"
+          [disabled]="cardDisabled"
           type="button"
           (click)="cardPayment()"
           style="padding: 12px 32px; opacity: 120%; width: 50%; color: white"
@@ -18,7 +20,9 @@
         <button
           id="paypalButton"
           mat-raised-button
+          class="ovo"
           [ngStyle]="{ 'background-color': paypal ? 'green' : '#1565c0' }"
+          [disabled]="paypalDisabled"
           (click)="paypalPayment()"
           color="primary"
           type="button"
@@ -31,6 +35,8 @@
         <button
           id="qrButton"
           mat-raised-button
+          class="ovo"
+          [disabled]="qrCodeDisabled"
           [ngStyle]="{ 'background-color': qrcode ? 'green' : '#1565c0' }"
           (click)="qrcodeToggle()"
           color="primary"
@@ -44,7 +50,9 @@
         <button
           id="bitcoinButton"
           mat-raised-button
+          class="ovo"
           [ngStyle]="{ 'background-color': bitcoin ? 'green' : '#1565c0' }"
+          [disabled]="bitcoinDisabled"
           (click)="bitcoinPayment()"
           color="primary"
           type="button"
